@@ -7,6 +7,8 @@ const queries = require('./db/queries');
 const os = require('os');
 const path = require('path');
 
+require('electron-reload')(__dirname);
+
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
@@ -19,107 +21,24 @@ let width = 800;
 let height = 600;
 let canQuitApp = false;
 
-const executeJobs = () => {
-  killBrowsers.execute();
-  test.execute();
-}
-
-const showSurvey = (url, user) => {
+const openMain = (initData) => {
   window = new BrowserWindow({
     width: 1280,
     height: 720,
     webPreferences: {
       nodeIntegration: true
     },
-    alwaysOnTop: true,
+    alwaysOnTop: false,
     frame: true,
-    fullscreen: true
+    fullscreen: false
   });
-  ipcMain.on('survey-request-data', (e, args) => {
-    e.reply('survey-request-data-reply', {
-      url: url,
-      user: user
-    })
+  ipcMain.on('main-request-data', (e, args) => {
+    e.reply('main-request-data-response', initData);
   })
-  ipcMain.on('filled-survey', async(e, args) => {
-    console.log('User has filled survey: ', args, user);
-    await queries.updateSurveyStatus(user, true);
-    console.log('User survey state was updated to: TRUE');
-    e.reply('survey-state-to-true', {});
-  })
-  window.loadFile(path.join(__dirname, 'pages', `${settings.PAGES.surveyPage}.html`));
+  window.loadFile(path.join(__dirname, 'pages', `${settings.PAGES.startPage}.html`));
   window.on('close', () => {
     app.quit();
   })
-}
-
-const showSurveyOrClose = async (userName, userDomain, APP_PREFERENCES) => {
-  const user = await queries.getUser(userName, userDomain);
-  console.log('User obtained on show survey before: ', user);
-  if (APP_PREFERENCES.showSurvey) {
-    if (!user.hasFilledSurvey) {
-      if (user.domain.toLowerCase() === "intec") {
-        showSurvey(APP_PREFERENCES.studentUrl, user);
-      } else {
-        showSurvey(APP_PREFERENCES.teacherUrl, user);
-      }
-    } else {
-      canQuitApp = true;
-      app.quit();
-    }
-  } else {
-    canQuitApp = true;
-    app.quit();
-  }
-}
-
-const showReminder = (user, APP_PREFERENCES) => {
-  window = new BrowserWindow({
-    width: 1100,
-    height: 500,
-    webPreferences: {
-      nodeIntegration: true
-    },
-    alwaysOnTop: true,
-    frame: false,
-    resizable: false
-  });
-  window.loadFile(path.join(__dirname, 'pages', `${settings.PAGES.reminderPage}.html`));
-  // window.webContents.openDevTools();
-  window.on('close', () => {
-    console.log('You have closed reminder window');
-    showSurveyOrClose(user.intecId, user.domain, APP_PREFERENCES);
-  })
-}
-
-const showRules = async (userName, userDomain, trimester, APP_PREFERENCES) => {
-  const RULES = await queries.getRules();
-  window = new BrowserWindow({
-    width: 1100,
-    height: 500,
-    webPreferences: {
-      nodeIntegration: true
-    },
-    alwaysOnTop: true,
-    frame: true,
-    resizable: false,
-    fullscreen: true
-  });
-  ipcMain.on('rules-window-data-request', (event, arg) => {
-    event.reply('rules-window-data',{
-      rules: RULES,
-      user: {
-        username: userName,
-        domain: userDomain
-      },
-      trimester: trimester
-    })
-  });
-  window.loadFile(path.join(__dirname, 'pages', `${settings.PAGES.rulesPage}.html`));
-  window.on('close', () => {
-    console.log('You have closed rules window');
-    showSurveyOrClose(userName, userDomain, APP_PREFERENCES);
-  });
 }
 
 app.on('ready', async () => {
@@ -137,9 +56,9 @@ app.on('ready', async () => {
   const blackListedUsers = await queries.getBlackListUsers();
   const isUserBlackListed = blackListedUsers.find(u => u.intecId.toLowerCase() === userName.toLowerCase());
 
-  if (isUserBlackListed) {
+  if (!isUserBlackListed) {
     // Stop execution of the program.
-    console.log('You are blacklisted, so the program will close.');
+    console.log('You are not an administrator for LTI Admin V2, so you cannot open this software. ;)');
     app.quit();
     return;
   }
@@ -148,7 +67,6 @@ app.on('ready', async () => {
   const configs = await queries.getConfigs();
   // get trimestres
   const trimesters = await queries.getTrimesters();
-
   const currentTrimester = await queries.getCurrentTrimester();
 
   const APP_PREFERENCES = {
@@ -158,22 +76,14 @@ app.on('ready', async () => {
     teacherUrl: configs.find(cfg => cfg.key === settings.CONFIGS.teacherUrl).value,
   }
 
-  const USERS = (userDomain.toLowerCase() === "intec") ? await queries.getStudentInCurrentTrimester(currentTrimester[0], userName) : await queries.getTeacherInCurrentTrimester(currentTrimester[0], userName);
-  const USER = USERS[0];
+  const user = await queries.getUser(userName, userDomain);
 
-  console.log("CURRENT STUDENT", USER);
-  if (!USER) {
-    showRules(userName, userDomain, currentTrimester[0], APP_PREFERENCES);
-  } else {
-    console.log(USER);
-    showReminder(USER, APP_PREFERENCES);
-  }
+  openMain({
+    user: user,
+    admins: blackListedUsers,
+    preferences: APP_PREFERENCES
+  });
   
-  // Execute this code to Close any browser. So user first completes this process and then,
-  //  can use the computer.
-  // jobs = setInterval(() => {
-  //   executeJobs();
-  // }, 5000);
 });
 
 app.on('window-all-closed', () => {

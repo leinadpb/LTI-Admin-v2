@@ -1,8 +1,5 @@
 const PAGES = {
   startPage: 'start',
-  rulesPage: 'rules',
-  reminderPage: 'rulesReminder',
-  surveyPage: 'survey'
 }
 
 const CONFIGS = {

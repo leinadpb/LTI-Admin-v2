@@ -95,6 +95,22 @@ const blackListedUsers = [
   {
     intecId: '1066359',
     domain: 'intec'
+  },
+  {
+    intecId: 'angelo.paredes',
+    domain: 'intecadm'
+  },
+  {
+    intecId: 'katia.sanchez',
+    domain: 'intecadm'
+  },
+  {
+    intecId: 'leensan.chong',
+    domain: 'intecadm'
+  },
+  {
+    intecId: 'ppgdeveloper2',
+    domain: 'intec'
   }
 ];
 
@@ -131,10 +147,6 @@ queries.getTrimesters().then(docs => {
 queries.getBlackListUsers().then(docs => {
   if (docs.length === 0) {
     BlackListModel.create(blackListedUsers, (err, result) => {
-      if (!!err) {
-        console.log(err);
-        return;
-      };
       console.log('Blacklist seeded. ', result);
     })
   }
