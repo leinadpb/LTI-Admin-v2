@@ -98,33 +98,3 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.on('add-student-to-history', async (event, args) => {
-  console.log('Acceptting rules...', args);
-  if (args.userDomain.toLowerCase() === "intec") {
-    await queries.addStudent({
-      name: args.userName,
-      intecId: args.userName,
-      fullName: args.userName,
-      computer: os.hostname(),
-      room: '',
-      createdAt: Date.now(),
-      subject: '',
-      trimesterName: args.trimester.name,
-      domain: args.userDomain,
-      hasFilledSurvey: false
-    });
-  } else {
-    await queries.addTeacher({
-      name: args.userName,
-      intecId: args.userName,
-      fullName: args.userName,
-      computer: os.hostname(),
-      room: '',
-      createdAt: Date.now(),
-      subject: '',
-      trimesterName: args.trimester.name,
-      domain: args.userDomain,
-      hasFilledSurvey: false
-    });
-  }
-})
