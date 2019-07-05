@@ -1,6 +1,6 @@
 {
-  "name": "lab-app",
-  "productName": "lab-app",
+  "name": "lab-admin",
+  "productName": "lab-admin",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": "src/index.js",
@@ -12,7 +12,7 @@
     "lint": "echo \"No linting configured\""
   },
   "keywords": [],
-  "author": "ppgdeveloper2",
+  "author": "Daniel Pena y Angelo Paredes",
   "license": "MIT",
   "config": {
     "forge": {
@@ -21,7 +21,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "lab_app"
+            "name": "lab_admin"
           }
         },
         {
