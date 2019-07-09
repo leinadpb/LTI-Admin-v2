@@ -56,12 +56,12 @@ app.on('ready', async () => {
   const blackListedUsers = await queries.getBlackListUsers();
   const isUserBlackListed = blackListedUsers.find(u => u.intecId.toLowerCase() === userName.toLowerCase());
 
-  if (!isUserBlackListed) {
-    // Stop execution of the program.
-    console.log('You are not an administrator for LTI Admin V2, so you cannot open this software. ;)');
-    app.quit();
-    return;
-  }
+  // if (!isUserBlackListed) {
+  //   // Stop execution of the program.
+  //   console.log('You are not an administrator for LTI Admin V2, so you cannot open this software. ;)');
+  //   app.quit();
+  //   return;
+  // }
   
   // get configs
   const configs = await queries.getConfigs();
