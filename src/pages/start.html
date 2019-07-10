@@ -113,7 +113,7 @@
       .menu-option-indicator-off {
         width: 100%;
         height: 100%;
-        background-color: rgb(0, 0, 0, 0.30);
+        background-color: rgba(0, 0, 0, 0.30);
       }
       .menu-option > .menu-option-label {
         width: 100%;
@@ -127,7 +127,8 @@
         transition: all 0.2s;
         color: #911313;
       }
-      .main-content {
+
+      .home-content {
         grid-area: main;
         width: 100%;
         height: 100%;
@@ -135,6 +136,25 @@
         justify-content: center;
         align-items: center;
       }
+      .signs-content {
+        grid-area: main;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        display: none;
+      }
+      .survey-content {
+        grid-area: main;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        display: none;
+      }
+.main-content {margin-top: 8%;}   
 .inner {
 	overflow: hidden;
 }
@@ -144,6 +164,23 @@
 .inner:hover img {
 	transform: scale(1.5);
 }
+
+
+
+      .config-content {
+        grid-area: main;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        display: none;
+      }
+
+
+
+
+
       /* Media queries */
 
     </style>
@@ -167,7 +204,7 @@
       </div>
       <div class="sidebar">
         <div class="menu-options">
-          <div class="menu-option">
+          <div class="menu-option" onclick="menuOptionClick(this, 'home')">
             <div class="menu-option-indicator-on"></div>
             <div class="menu-option-label">
               <span>
@@ -175,7 +212,7 @@
               </span>
             </div>
           </div>
-          <div class="menu-option">
+          <div class="menu-option" onclick="menuOptionClick(this, 'signs')">
             <div class="menu-option-indicator-off"></div>
             <div class="menu-option-label">
               <span>
@@ -183,7 +220,7 @@
               </span>
             </div>
           </div>
-          <div class="menu-option">
+          <div class="menu-option" onclick="menuOptionClick(this, 'survey')">
             <div class="menu-option-indicator-off"></div>
             <div class="menu-option-label">
               <span>
@@ -191,11 +228,20 @@
               </span>
             </div>
           </div>
+          <div class="menu-option" onclick="menuOptionClick(this, 'config')">
+            <div class="menu-option-indicator-off"></div>
+            <div class="menu-option-label">
+              <span>
+                Configuración
+              </span>
+            </div>
+          </div>
         </div>
       </div>
+
       <div class="main-content">
         <div class="row mt-3 justify-content-center">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <div class="card shadow" style="width: 17rem;">
               <div class="inner">
                 <img class="card-img-top"  style="width: 12rem; margin-left: 40px" src="../../public/images/calendar.png" alt="Card image cap">
@@ -210,7 +256,7 @@
           </div>
     
     
-          <div class="col-md-4">
+          <div class="col-md-3">
             <div class="card shadow" style="width: 17rem;">
               <div class="inner">
                 <img class="card-img-top"  style="width: 12rem; margin-left: 40px" src="../../public/images/loupe.png" alt="Card image cap">
@@ -222,7 +268,7 @@
                 </div>
               </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <div class="card shadow" style="width: 17rem;">
               <div class="inner">
                 <img class="card-img-top"  style="width: 12rem; margin-left: 40px" src="../../public/images/admin.png" alt="Card image cap">
@@ -237,6 +283,19 @@
           </div>
         </div>
         
+
+      <div class="home-content" id="home">
+        Home content
+      </div>
+      <div class="signs-content" id="signs">
+        Signs content
+      </div>
+      <div class="survey-content" id="survey">
+        Survey content
+      </div>
+      <div class="config-content" id="config">
+        Configuration content
+
       </div>
     </div>
     <script>
@@ -249,6 +308,19 @@
       });
 
       // Functions
+      const options = ['home', 'survey', 'signs', 'config'];
+      function menuOptionClick(e, key) {
+        options.forEach(opt => {
+          document.getElementById(opt).style.display = "none";
+        });
+        let menuOptions = document.getElementsByClassName("menu-option");
+        for(let i = 0; i < menuOptions.length; i++) {
+          opt = menuOptions[i]
+          opt.children[0].style.background = "rgba(0, 0, 0, 0.30)";
+        }
+        document.getElementById(key).style.display = "inline-block";
+        e.children[0].style.background = "#b51818";
+      }
 
     </script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
