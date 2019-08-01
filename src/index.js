@@ -68,6 +68,8 @@ app.on('ready', async () => {
   // get trimestres
   const trimesters = await queries.getTrimesters();
   const currentTrimester = await queries.getCurrentTrimester();
+  const allStudents = await queries.getHistoryStudents();
+  const subjects = await queries.getSubjects();
 
   const APP_PREFERENCES = {
     fullscreen: configs.find(cfg => cfg.key === settings.CONFIGS.isFullscreen).value,
@@ -81,7 +83,11 @@ app.on('ready', async () => {
   openMain({
     user: user,
     admins: blackListedUsers,
-    preferences: APP_PREFERENCES
+    preferences: APP_PREFERENCES,
+    trimesters: trimesters,
+    currentTrimester: currentTrimester,
+    allStudents: allStudents,
+    subjects: subjects
   });
   
 });

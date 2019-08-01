@@ -12,7 +12,7 @@
         width: 100%;
         height: 100vh;
         display: grid;
-        grid-template-columns: 1fr 3fr;
+        grid-template-columns: 1fr 4fr;
         grid-template-rows: 1fr 5fr;
         grid-template-areas: 
           "header header"
@@ -257,12 +257,12 @@
         </div>
         <div class="title-box">
           <div class="main-title">
-            <h2>LATI Admin V2</h2>
+            <h2>LABTI Admin V2</h2>
           </div>
         </div>
         <div class="user-box">
           <div class="username">
-            <b><span id="user-label">daniel.pena</span></b>
+            <b><span id="user-label"></span></b>
           </div>
         </div>
       </div>
@@ -378,7 +378,68 @@
         </div>
       </div>
       <div class="signs-content" id="signs">
-        Signs content
+        <div class="filter-panel">
+          <div class="filter-option">
+            <div><span>Asignatura: </span></div>
+            <div>
+              <select name="subject-list" id="subject-list" class="form-control">
+                <option value="-1">Seleccione...</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-option">
+            <div><span>Profesor: </span></div>
+            <div>
+              <select name="teacher-list" id="teacher-list" class="form-control">
+                <option value="-1">Seleccione...</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-option">
+            <div><span>Trimestre: </span></div>
+            <div>
+              <select name="trimestre-list" id="trimestre-list" class="form-control">
+                <option value="-1">Seleccione...</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-option">
+            <div><span>ID: </span></div>
+            <div>
+              <input class="form-control" type="text" />
+            </div>
+          </div>
+          <div class="filter-button">
+            <button class="btn btn-secondary btn-sm">Filtrar</button>
+          </div>
+        </div>
+        <div class="table-wrapper table">
+          <table class="table">
+            <thead>
+              <tr>
+                <th align="center">
+                  ID
+                </th>
+                <th align="center">
+                  Nombre
+                </th>
+                <th align="center">
+                  Asignatura
+                </th>
+                <th align="center">
+                  Profesor
+                </th>
+                <th align="center">
+                  Sección
+                </th>
+                <th align="center">
+                  Trimestre
+                </th>
+              </tr>
+            </thead>
+            <tbody id="stduents-data"></tbody>
+          </table>
+        </div>
       </div>
       <div class="survey-content" id="survey">
         Survey content
@@ -400,17 +461,46 @@
             <label for="checkbox3">Mostrar recordatorio de las tres normas principales al iniciar</label>
           </div>
         </div>
-        
-        
-
       </div>
     <script>
       const ipcRenderer = require('electron').ipcRenderer;
+      const studentFields = ['intecId', 'name', 'subject', 'teacher', 'section', 'trimesterName'];
+
       let windowData = undefined;
       ipcRenderer.send('main-request-data', {});
       ipcRenderer.on('main-request-data-response', (e, args) => {
         windowData = args;
+        document.getElementById('user-label').innerHTML = windowData.user.name;
         console.log('Window data: ', windowData);
+        // Call init fucntions
+        getUnfilteredData();
+        setSelectData('subject-list', windowData.subjects.map(x => {
+          return {
+            value: x.code,
+            text: x.name
+          }
+        }));
+        let teachers = [];
+        windowData.subjects.forEach(fs => {
+          let subTeachers = fs.teacherAssigned.split(';');
+          subTeachers.forEach(st => {
+            teachers.push(st);
+          })
+        })
+        setSelectData('teacher-list', teachers.map(x => {
+          if (!!x && x.length > 0) {
+            return {
+              value: x,
+              text: x
+            }
+          }
+        }));
+        setSelectData('trimestre-list', windowData.trimesters.map(x => {
+          return {
+            value: x.customId,
+            text: x.name
+          }
+        }));
       });
 
       // Functions
@@ -428,8 +518,38 @@
         e.children[0].style.background = "#b51818";
       }
 
-    
 
+      // Signs
+      const getUnfilteredData = async () => {
+        let students = windowData.allStudents;
+        console.log(students);
+        renderStudents(students);
+      }
+      function renderStudents(students) {
+        let data = document.getElementById('stduents-data');
+        for(let i = 0; i < students.length; i++) {
+          let s = students[i];
+          console.log('Student: >>>', s);
+          let tr = document.createElement('tr');
+          for(let j = 0; j < studentFields.length; j++) {
+            let field = studentFields[j];
+            let td = document.createElement('td');
+            td.align = "center";
+            td.innerHTML = s[field];
+            tr.appendChild(td);
+          }
+          data.appendChild(tr);
+        }
+      }
+      function setSelectData(id, dataList) {
+        let select = document.getElementById(id);
+        dataList.forEach(data => {
+          let option = document.createElement('option');
+          option.value = data.value;
+          option.innerHTML = data.text;
+          select.appendChild(option);
+        })
+      }
     </script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
