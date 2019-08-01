@@ -36,3 +36,14 @@
   max-height: 75%;
   overflow: auto;
 }
+.filter-button {
+  display: flex;
+  flex-direction: column;
+}
+.filter-button button{
+  margin: 4px;
+}
+
+.signs-content span, .signs-content td, .signs-content th {
+  font-size: 0.75rem;
+}

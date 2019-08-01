@@ -35,6 +35,10 @@ const openMain = (initData) => {
   ipcMain.on('main-request-data', (e, args) => {
     e.reply('main-request-data-response', initData);
   })
+  ipcMain.on('fetch-students', async (e, args) => {
+    let studentsResult = await queries.getHistoryStudentsFiltered(args.filterObject);
+    e.reply('fetch-students-response', studentsResult);
+  })
   window.loadFile(path.join(__dirname, 'pages', `${settings.PAGES.startPage}.html`));
   window.on('close', () => {
     app.quit();

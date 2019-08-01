@@ -65,6 +65,15 @@ const getHistoryStudents = () => {
     return docs;
   }).lean();
 }
+const getHistoryStudentsFiltered = (filterObject) => {
+  return HistoryStudentModel.find(!!filterObject ? filterObject : {}, (err, docs) => {
+    if (!!err) {
+      console.log('Error retreiving student: ', err);
+      return null;
+    }
+    return docs;
+  }).lean();
+}
 const getStudents = (intecId) => {
   return HistoryStudentModel.find({}, (err, docs) => {
     if (!!err) {
@@ -234,4 +243,5 @@ module.exports = {
   getUser,
   getHistoryStudents,
   getSubjects,
+  getHistoryStudentsFiltered,
 }

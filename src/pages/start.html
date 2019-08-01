@@ -398,7 +398,7 @@
           <div class="filter-option">
             <div><span>Trimestre: </span></div>
             <div>
-              <select name="trimestre-list" id="trimestre-list" class="form-control">
+              <select name="trimester-list" id="trimester-list" class="form-control">
                 <option value="-1">Seleccione...</option>
               </select>
             </div>
@@ -406,38 +406,39 @@
           <div class="filter-option">
             <div><span>ID: </span></div>
             <div>
-              <input class="form-control" type="text" />
+              <input class="form-control" type="text" id="student-id" />
             </div>
           </div>
           <div class="filter-button">
-            <button class="btn btn-secondary btn-sm">Filtrar</button>
+            <button class="btn btn-secondary btn-sm" onclick="cleanFilters()">Limpiar</button>
+            <button class="btn btn-primary btn-sm" onclick="applyFilters()">Filtrar</button>
           </div>
         </div>
         <div class="table-wrapper table">
-          <table class="table">
-            <thead>
+          <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
               <tr>
-                <th align="center">
+                <th style="text-align: center; vertical-align: middle;">
                   ID
                 </th>
-                <th align="center">
+                <th style="text-align: center; vertical-align: middle;">
                   Nombre
                 </th>
-                <th align="center">
+                <th style="text-align: center; vertical-align: middle;">
                   Asignatura
                 </th>
-                <th align="center">
+                <th style="text-align: center; vertical-align: middle;">
                   Profesor
                 </th>
-                <th align="center">
+                <th style="text-align: center; vertical-align: middle;">
                   Sección
                 </th>
-                <th align="center">
+                <th style="text-align: center; vertical-align: middle;">
                   Trimestre
                 </th>
               </tr>
             </thead>
-            <tbody id="stduents-data"></tbody>
+            <tbody id="stduents-data" class="table-striped"></tbody>
           </table>
         </div>
       </div>
@@ -495,13 +496,18 @@
             }
           }
         }));
-        setSelectData('trimestre-list', windowData.trimesters.map(x => {
+        setSelectData('trimester-list', windowData.trimesters.map(x => {
           return {
-            value: x.customId,
+            value: x.name,
             text: x.name
           }
         }));
       });
+      ipcRenderer.on('fetch-students-response', (e, args) => {
+        let students = args;
+        console.log('Obtained students >>>>>>>>', students);
+        renderStudents(students);
+      })
 
       // Functions
       const options = ['home', 'survey', 'signs', 'config'];
@@ -527,6 +533,10 @@
       }
       function renderStudents(students) {
         let data = document.getElementById('stduents-data');
+        // Clean list
+        while (data.firstChild) {
+          data.removeChild(data.firstChild);
+        } // End cleaning
         for(let i = 0; i < students.length; i++) {
           let s = students[i];
           console.log('Student: >>>', s);
@@ -549,6 +559,34 @@
           option.innerHTML = data.text;
           select.appendChild(option);
         })
+      }
+      function cleanFilters() {
+        let teacherFilter = document.getElementById('teacher-list');
+        let subjectFilter = document.getElementById('subject-list');
+        let trimesterFilter = document.getElementById('trimester-list');
+        let idFilter = document.getElementById('student-id');
+        teacherFilter.value = "-1";
+        subjectFilter.value = "-1";
+        trimesterFilter.value = "-1";
+        idFilter.value = "";
+
+        applyFilters();
+      }
+      function applyFilters() {
+        let teacherFilter = document.getElementById('teacher-list');
+        let subjectFilter = document.getElementById('subject-list');
+        let trimesterFilter = document.getElementById('trimester-list');
+        let idFilter = document.getElementById('student-id');
+        let filtersToApply = [];
+        if (teacherFilter.value !== "-1") filtersToApply.push({key: 'teacher', value: teacherFilter.value});
+        if (subjectFilter.value !== "-1") filtersToApply.push({key: 'subject', value: subjectFilter.value});
+        if (trimesterFilter.value !== "-1") filtersToApply.push({key: 'trimesterName', value: trimesterFilter.value});
+        if (idFilter.value !== "") filtersToApply.push({key: 'intecId', value: idFilter.value});
+        let filterObject = {};
+        filtersToApply.forEach(filter => {
+          filterObject[filter.key] = filter.value;
+        });
+        ipcRenderer.send('fetch-students', {filterObject: filterObject});
       }
     </script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
