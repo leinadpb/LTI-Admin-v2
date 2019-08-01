@@ -28,7 +28,7 @@ const openMain = (initData) => {
     webPreferences: {
       nodeIntegration: true
     },
-    alwaysOnTop: false,
+    alwaysOnTop: true,
     frame: true,
     fullscreen: false
   });

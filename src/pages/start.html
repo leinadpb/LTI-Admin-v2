@@ -176,7 +176,7 @@
 
 
 
-      .config-content {
+   .config-content {
         grid-area: main;
         width: 100%;
         height: 100%;
@@ -185,9 +185,64 @@
         align-items: center;
         display: none;
       }
+      .config-normas{
+        width: 50%;
+        height: 50%;
+      }
 
+      .config-title {
+      margin: 2%;
+      text-align: center;
+      font-size: 25px;
+      }
+      .rules-title {
+        margin: 3%;
+        font-size: 20px;
+        text-align: center;
+      }
+    .config-content input[type="checkbox"] {
+      
+       display: none;
+     }
+     .config-content .checkbox label {
+       color: #000;
+       padding: 5px 15px 5px 51px;
+       display: inline-block;
+       position: relative;
+       border-radius: 3px;
+       cursor:pointer;
+       transition: all 0.5s ease;
+     }
+     .config-content .checkbox label:hover {
+       background: rgba(216, 12, 12, 0.1);
+     }
+     .config-content .checkbox label:before {
+       content: "";
+       width: 17px;
+       height: 17px;
+       display:inline-block;
+       background: none;
+       border: 3px solid rgb(29, 27, 27);
+       border-radius: 50%;
+       position: absolute;
+       left: 17px;
+       top:4px;
 
-
+     };
+     .config-content .checkbox label:before {
+       border-radius: 3px;
+     }
+     .config-content input[type="checkbox"]:checked + label {
+       padding:5px 15px;
+       background: #911313;
+       border-radius: 2px;
+       color: #fff;
+     }
+     .config-content input[type="checkbox"]:checked + label:before{
+       display:none;
+     }
+    
+     
 
 
       /* Media queries */
@@ -329,7 +384,24 @@
         Survey content
       </div>
       <div class="config-content" id="config">
-        <p>Configuration content</p>
+        <h2 class ="config-title">Configuraciones</h2>
+
+        <div class="config-normas">
+          <h3 class="rules-title">Normas</h3>
+          <hr>
+          <div class="checkbox">
+            <input type="checkbox" class="normas"  id="checkbox1">
+            <label for="checkbox1">Permitir aceptar las normas del laboratorio</label>
+            <br>
+            <input type="checkbox" class="normas"  id="checkbox2">
+            <label for="checkbox2">Permitir seleccionar asignatura y/o profesor.</label>
+            <br>
+            <input type="checkbox" class="normas"  id="checkbox3" for="checkbox3">
+            <label for="checkbox3">Mostrar recordatorio de las tres normas principales al iniciar</label>
+          </div>
+        </div>
+        
+        
 
       </div>
     <script>
