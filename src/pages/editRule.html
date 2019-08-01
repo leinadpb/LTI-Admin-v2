@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Editar regla</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" >
+    <style>
+      .page-wrapper {
+        width: 100%;
+        height: 100vh;
+        display: grid;
+        grid-template-columns: auto;
+        grid-template-rows: 4fr 1fr;
+      }
+      .rule-content {
+        width: 100%;
+        height: 100%;
+        padding: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .rule-content textarea {
+        width: 80%;
+        font-size: 1.24rem;
+      }
+      .actions-btns {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        padding: 16px;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .actions-btns button {
+        margin: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <div class="rule-content">
+        <textarea id="current-rule" rows="10" autofocus=true></textarea>
+      </div>
+      <div class="actions-btns">
+        <button class="btn btn-secondary" onclick="cancel()">Cancelar</button>
+        <button class="btn btn-primary" onclick="save()">Guardar</button>
+      </div>
+    </div>
+    <script>
+      const ipcRenderer = require('electron').ipcRenderer;
+      const remote = require('electron').remote;
+      let windowData = undefined;
+      ipcRenderer.send('edit-rule-request-data', {});
+      ipcRenderer.on('edit-rule-response-data', (e, args) => {
+        windowData = args;
+        console.log('window data >>>', windowData);
+        document.getElementById('current-rule').innerHTML = windowData.rule.text;
+      });
+      ipcRenderer.on('refresh-rules', (e, args) => {
+        let mainWindow = remote.getGlobal('window');
+        console.log('main window >>>', mainWindow);
+        if (mainWindow) mainWindow.webContents.send('refresh-rules', args.rules);
+        window.close();
+      })
+      function cancel() {
+        window.close();
+      }
+      function save() {
+        ipcRenderer.send('edit-rule-request-save', {newRule: { text: document.getElementById('current-rule').value, number: windowData.rule.number }});
+      }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  </body>
+</html>

@@ -27,6 +27,45 @@ const getRules = () => {
     return docs;
   }).lean();
 }
+const updateRule = (rule) => {
+  return RuleModel.updateOne({number: rule.number}, rule, (err, doc) => {
+    if (!!err) {
+      console.log('Error update rule: ', err);
+      return null;
+    }
+    return doc;
+  });
+}
+const deleteRule = (rule) => {
+  return RuleModel.findOneAndDelete({number: rule.number}, (err) => {
+    if (!!err) {
+      console.log('Error deleting rule: ', err);
+      return null;
+    }
+  });
+}
+const addRule = (rule) => {
+  return RuleModel.create(rule, (err) => {
+    if (!!err) {
+      console.log('Error addding rule: ', err);
+      return null;
+    }
+  });
+}
+const updateRuleByText = (rule) => {
+  return RuleModel.updateOne({text: rule.text}, rule, (err, doc) => {
+    if (!!err) {
+      console.log('Error updating rule: ', err);
+      return null;
+    }
+    return doc;
+  });
+}
+const updateRulesNumbers = (rules) => {
+  rules.forEach(async (rule, idx) => {
+    await updateRuleByText({text: rule.text, number: idx + 1});
+  })
+}
 
 // TRIMESTERS
 const getTrimesters = () => {
@@ -244,4 +283,9 @@ module.exports = {
   getHistoryStudents,
   getSubjects,
   getHistoryStudentsFiltered,
+  updateRule,
+  deleteRule,
+  addRule,
+  updateRulesNumbers,
+  updateRuleByText,
 }

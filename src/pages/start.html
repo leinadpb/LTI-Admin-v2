@@ -17,7 +17,7 @@
         grid-template-areas: 
           "header header"
           "sidebar main";
-          
+        overflow: hidden;
       }
       .header {
         grid-area: header;
@@ -148,6 +148,15 @@
         display: none;
       }
       .survey-content {
+        grid-area: main;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        display: none;
+      }
+      .rules-content {
         grid-area: main;
         width: 100%;
         height: 100%;
@@ -289,6 +298,14 @@
             <div class="menu-option-label">
               <span>
                 Encuestas
+              </span>
+            </div>
+          </div>
+          <div class="menu-option" onclick="menuOptionClick(this, 'rules')">
+            <div class="menu-option-indicator-off"></div>
+            <div class="menu-option-label">
+              <span>
+                Reglas LABTI
               </span>
             </div>
           </div>
@@ -445,6 +462,22 @@
       <div class="survey-content" id="survey">
         Survey content
       </div>
+      <div class="rules-content" id="rules">
+        <div class="header">
+          <span style="margin-right: 16px;">Reglas del LABTI - INTEC</span>
+          <button class="btn btn-primary btn-sm" onclick="createRule()">Crear</button>
+        </div>
+        <div class="table-wrapper">
+          <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+              <th>No.</th>
+              <th>Regla</th>
+              <th></th>
+            </thead>
+            <tbody id="rules-data" class="table-striped"></tbody>
+          </table>
+        </div>
+      </div>
       <div class="config-content" id="config">
         <h2 class ="config-title">Configuraciones</h2>
 
@@ -466,6 +499,7 @@
     <script>
       const ipcRenderer = require('electron').ipcRenderer;
       const studentFields = ['intecId', 'name', 'subject', 'teacher', 'section', 'trimesterName'];
+      const rulesFields = ['number', 'text', 'actions'];
 
       let windowData = undefined;
       ipcRenderer.send('main-request-data', {});
@@ -475,6 +509,7 @@
         console.log('Window data: ', windowData);
         // Call init fucntions
         getUnfilteredData();
+        getRulesData();
         setSelectData('subject-list', windowData.subjects.map(x => {
           return {
             value: x.code,
@@ -510,7 +545,7 @@
       })
 
       // Functions
-      const options = ['home', 'survey', 'signs', 'config'];
+      const options = ['home', 'survey', 'signs', 'rules', 'config'];
       function menuOptionClick(e, key) {
         options.forEach(opt => {
           document.getElementById(opt).style.display = "none";
@@ -524,6 +559,63 @@
         e.children[0].style.background = "#b51818";
       }
 
+      // Rules
+      ipcRenderer.on('refresh-rules', (e, args) => {
+        console.log('refresing.....', args);
+        renderRules(args.sort(function(a, b) { return a.number - b.number }));
+      })
+      const createRule = () => {
+        ipcRenderer.send('open-add-rules', {});
+      }
+      const getRulesData = () => {
+        let rules = windowData.rules.sort(function(a, b) { return a.number - b.number });
+        console.log(rules);
+        renderRules(rules);
+      }
+      function renderRules(rules) {
+        let data = document.getElementById('rules-data');
+        // Clean list
+        while (data.firstChild) {
+          data.removeChild(data.firstChild);
+        } // End cleaning
+        for(let i = 0; i < rules.length; i++) {
+          let s = rules[i];
+          let tr = document.createElement('tr');
+          for(let j = 0; j < rulesFields.length; j++) {
+            let field = rulesFields[j];
+            let td = document.createElement('td');
+            td.align = "center";
+            if (field === 'actions') {
+              // class="btn btn-secondary btn-sm" onclick="cleanFilters()"
+              let editBtn = document.createElement('button');
+              let deleteBtn = document.createElement('button');
+              editBtn.classList = "btn btn-secondary btn-sm";
+              editBtn.onclick = () => {
+                ipcRenderer.send('open-edit-rules', {rule: rules[i]});
+                console.log('Will edit rule: ', rules[i]);
+              }
+              editBtn.innerHTML = "Editar";
+              deleteBtn.classList = "btn btn-secondary btn-sm";
+              deleteBtn.onclick = () => {
+                ipcRenderer.send('open-delete-rules', {rule: rules[i]});
+                console.log('Will remove rule: ', rules[i]);
+              }
+              deleteBtn.innerHTML = "Eliminar";
+
+              let btnsWrapper = document.createElement('div');
+              btnsWrapper.classList = "btn-actions";
+              btnsWrapper.appendChild(editBtn);
+              btnsWrapper.appendChild(deleteBtn);
+              td.appendChild(btnsWrapper);
+            } else {
+              td.innerHTML = s[field];
+            }
+            
+            tr.appendChild(td);
+          }
+          data.appendChild(tr);
+        }
+      }
 
       // Signs
       const getUnfilteredData = async () => {

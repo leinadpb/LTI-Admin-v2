@@ -43,7 +43,45 @@
 .filter-button button{
   margin: 4px;
 }
-
 .signs-content span, .signs-content td, .signs-content th {
   font-size: 0.75rem;
+}
+
+/* Rules */
+.rules-content span, .rules-content td, .rules-content th, .rules-content div {
+  font-size: 0.75rem;
+}
+.rules-content .header {
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  height: 10%;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.rules-content .header span {
+  font-size: 1.12rem;
+  font-weight: 600;
+}
+.rules-content .table-wrapper {
+  width: 100%;
+  height: 90%;
+  max-height: 80%;
+  overflow: auto;
+}
+.rules-content .table-wrapper table tbody {
+  overflow: auto;
+}
+.rules-content .table-wrapper table th,  .rules-content .table-wrapper table td {
+  text-align: center;
+  vertical-align: middle;
+}
+.rules-content .btn-actions {
+  display: flex;
+  flex-direction: row;
+}
+.rules-content .btn-actions button {
+  margin: 4px;
 }
