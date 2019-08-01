@@ -4,6 +4,7 @@ const TrimesterModel = require('../models/trimesters');
 const HistoryStudentModel = require('../models/historyStudent');
 const HistoryTeacherModel = require('../models/historyTecher');
 const BlackListModel = require('../models/blackList');
+const SubjectModel = require('../models/subject');
 
 // CONFIGS
 const getConfigs = () => {
@@ -25,6 +26,45 @@ const getRules = () => {
     }
     return docs;
   }).lean();
+}
+const updateRule = (rule) => {
+  return RuleModel.updateOne({number: rule.number}, rule, (err, doc) => {
+    if (!!err) {
+      console.log('Error update rule: ', err);
+      return null;
+    }
+    return doc;
+  });
+}
+const deleteRule = (rule) => {
+  return RuleModel.findOneAndDelete({number: rule.number}, (err) => {
+    if (!!err) {
+      console.log('Error deleting rule: ', err);
+      return null;
+    }
+  });
+}
+const addRule = (rule) => {
+  return RuleModel.create(rule, (err) => {
+    if (!!err) {
+      console.log('Error addding rule: ', err);
+      return null;
+    }
+  });
+}
+const updateRuleByText = (rule) => {
+  return RuleModel.updateOne({text: rule.text}, rule, (err, doc) => {
+    if (!!err) {
+      console.log('Error updating rule: ', err);
+      return null;
+    }
+    return doc;
+  });
+}
+const updateRulesNumbers = (rules) => {
+  rules.forEach(async (rule, idx) => {
+    await updateRuleByText({text: rule.text, number: idx + 1});
+  })
 }
 
 // TRIMESTERS
@@ -55,6 +95,24 @@ const getCurrentTrimester = () => {
 }
 
 // History Students
+const getHistoryStudents = () => {
+  return HistoryStudentModel.find({}, (err, docs) => {
+    if (!!err) {
+      console.log('Error retreiving student: ', err);
+      return null;
+    }
+    return docs;
+  }).lean();
+}
+const getHistoryStudentsFiltered = (filterObject) => {
+  return HistoryStudentModel.find(!!filterObject ? filterObject : {}, (err, docs) => {
+    if (!!err) {
+      console.log('Error retreiving student: ', err);
+      return null;
+    }
+    return docs;
+  }).lean();
+}
 const getStudents = (intecId) => {
   return HistoryStudentModel.find({}, (err, docs) => {
     if (!!err) {
@@ -196,6 +254,16 @@ const deleteBlackListUser = (intecId) => {
   });
 }
 
+
+const getSubjects = () => {
+  return SubjectModel.find({}, (err) => {
+    if (!!err) {
+      console.log('Error retreiving Subjects: ', err);
+      return null;
+    }
+  }).lean()
+}
+
 module.exports = {
   getConfigs,
   getRules,
@@ -212,4 +280,12 @@ module.exports = {
   addBlackListUser,
   deleteBlackListUser,
   getUser,
+  getHistoryStudents,
+  getSubjects,
+  getHistoryStudentsFiltered,
+  updateRule,
+  deleteRule,
+  addRule,
+  updateRulesNumbers,
+  updateRuleByText,
 }

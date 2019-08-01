@@ -1,5 +1,8 @@
 const PAGES = {
   startPage: 'start',
+  editRulePage: 'editRule',
+  deleteRulesPage: 'deleteRule',
+  addRulePage: 'addRule',
 }
 
 const CONFIGS = {
