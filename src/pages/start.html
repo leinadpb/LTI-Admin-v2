@@ -165,6 +165,15 @@
         align-items: center;
         display: none;
       }
+      .trimesters-content {
+        grid-area: main;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        display: none;
+      }
 
       .main-content {
                 
@@ -361,6 +370,14 @@
               </span>
             </div>
           </div>
+          <div class="menu-option" onclick="menuOptionClick(this, 'trimesters')">
+            <div class="menu-option-indicator-off"></div>
+            <div class="menu-option-label">
+              <span>
+                Trimestres
+              </span>
+            </div>
+          </div>
           <div class="menu-option" onclick="menuOptionClick(this, 'config')">
             <div class="menu-option-indicator-off"></div>
             <div class="menu-option-label" id="settings">
@@ -530,7 +547,23 @@
           </table>
         </div>
       </div>
-   
+      <div class="trimesters-content" id="trimesters">
+        <div class="header">
+          <span style="margin-right: 16px;">Trimestres - INTEC</span>
+          <button class="btn btn-primary btn-sm" onclick="createTrimester()">Crear</button>
+        </div>
+        <div class="table-wrapper">
+          <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+              <th>Inicio</th>
+              <th>Fin</th>
+              <th>Nombre</th>
+              <th></th>
+            </thead>
+            <tbody id="trimesters-data" class="table-striped"></tbody>
+          </table>
+        </div>
+      </div>
       <div class="config-content" id="config">
         <h2 class ="config-title">Configuraciones</h2>
         <div class="config-normas">
@@ -568,15 +601,12 @@
                   </select>
               </div>
         </div>
-
-         
-        
       </div>
-      
     <script>
       const ipcRenderer = require('electron').ipcRenderer;
       const studentFields = ['intecId', 'name', 'subject', 'teacher', 'section', 'trimesterName'];
       const rulesFields = ['number', 'text', 'actions'];
+      const trimestersFields = ['start', 'ends', 'name', 'actions'];
 
       let windowData = undefined;
       ipcRenderer.send('main-request-data', {});
@@ -587,6 +617,7 @@
         // Call init fucntions
         getUnfilteredData();
         getRulesData();
+        getTrimesterData();
         setSelectData('subject-list', windowData.subjects.map(x => {
           return {
             value: x.code,
@@ -622,7 +653,7 @@
       })
 
       // Functions
-      const options = ['home', 'survey', 'signs', 'rules', 'config'];
+      const options = ['home', 'survey', 'signs', 'rules', 'trimesters', 'config'];
       function menuOptionClick(e, key) {
         options.forEach(opt => {
           document.getElementById(opt).style.display = "none";
@@ -638,7 +669,6 @@
 
       // Rules
       ipcRenderer.on('refresh-rules', (e, args) => {
-        console.log('refresing.....', args);
         renderRules(args.sort(function(a, b) { return a.number - b.number }));
       })
       const createRule = () => {
@@ -646,7 +676,6 @@
       }
       const getRulesData = () => {
         let rules = windowData.rules.sort(function(a, b) { return a.number - b.number });
-        console.log(rules);
         renderRules(rules);
       }
       function renderRules(rules) {
@@ -688,6 +717,63 @@
               td.innerHTML = s[field];
             }
             
+            tr.appendChild(td);
+          }
+          data.appendChild(tr);
+        }
+      }
+
+      // Trimesters
+      function sortTrimesters(a, b) {
+        return new Date(a.start) - new Date(b.number);
+      }
+      ipcRenderer.on('refresh-trimesters', (e, args) => {
+        console.log('refreshing trimesters>>> ', args);
+        renderTable('trimesters-data', args.sort(sortTrimesters), trimestersFields);
+      })
+      const createTrimester = () => {
+        ipcRenderer.send('open-add-trimester', {});
+      }
+      const getTrimesterData = () => {
+        let trimesters = windowData.trimesters.sort(sortTrimesters);
+        renderTable('trimesters-data', trimesters, trimestersFields);
+      }
+      function renderTable(_id, results, fields) {
+        let data = document.getElementById(_id);
+        // Clean list
+        while (data.firstChild) {
+          data.removeChild(data.firstChild);
+        } // End cleaning
+        for(let i = 0; i < results.length; i++) {
+          let s = results[i];
+          let tr = document.createElement('tr');
+          for(let j = 0; j < fields.length; j++) {
+            let field = fields[j];
+            let td = document.createElement('td');
+            td.align = "center";
+            if (field === 'actions') {
+              // class="btn btn-secondary btn-sm" onclick="cleanFilters()"
+              let editBtn = document.createElement('button');
+              let deleteBtn = document.createElement('button');
+              editBtn.classList = "btn btn-secondary btn-sm";
+              editBtn.onclick = () => {
+                ipcRenderer.send('open-edit-trimester', {trimester: results[i]});
+                console.log('Will edit trimester: ', results[i]);
+              }
+              editBtn.innerHTML = "Editar";
+
+              let btnsWrapper = document.createElement('div');
+              btnsWrapper.classList = "btn-actions";
+              btnsWrapper.appendChild(editBtn);
+              td.appendChild(btnsWrapper);
+            } else {
+              if (field === "start" || field === "ends") {
+                td.innerHTML = new Date(s[field]).toUTCString()
+              } else {
+                td.innerHTML = s[field];
+              }
+              
+            }
             tr.appendChild(td);
           }
           data.appendChild(tr);

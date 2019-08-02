@@ -41,6 +41,7 @@ const openMain = (initData) => {
     e.reply('fetch-students-response', studentsResult);
   })
 
+  // Rules Dialogs
   ipcMain.on('open-edit-rules', async(e, args) => {
     let data = args;
     ipcMain.on('edit-rule-request-data', async(e, args) => {
@@ -118,6 +119,34 @@ const openMain = (initData) => {
       e.reply('refresh-rules', {rules: existingRules});
     })
     child.loadFile(path.join(__dirname, 'pages', `${settings.PAGES.addRulePage}.html`));
+    child.show();
+  });
+
+  // Trimesters Dialogs
+  ipcMain.on('open-edit-trimester', async(e, args) => {
+    let data = args;
+    ipcMain.on('edit-trimester-request-data', async(e, args) => {
+      e.reply('edit-trimester-response-data', data);
+    })
+    let child = new BrowserWindow({ 
+      parent: window,
+      width: 480,
+      height: 480,
+      webPreferences: {
+        nodeIntegration: true,
+        nativeWindowOpen: true
+      },
+      frame: false,
+    });
+    ipcMain.on('edit-trimester-request-save', async(e, args) => {
+      let trimester = args.newTrimester;
+      console.log('to update >>', trimester);
+      await queries.updateTrimester(trimester);
+      let trimesters = await queries.getTrimesters();
+      // child.close();
+      e.reply('refresh-trimesters', {trimesters: trimesters});
+    })
+    child.loadFile(path.join(__dirname, 'pages', `${settings.PAGES.editTrimesterPage}.html`));
     child.show();
   });
   global.window = window;

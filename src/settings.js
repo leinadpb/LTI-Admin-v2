@@ -3,6 +3,8 @@ const PAGES = {
   editRulePage: 'editRule',
   deleteRulesPage: 'deleteRule',
   addRulePage: 'addRule',
+  editTrimesterPage: 'editTrimester',
+  addTrimesterPage: 'addTrimesterPage'
 }
 
 const CONFIGS = {

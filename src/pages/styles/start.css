@@ -85,3 +85,42 @@
 .rules-content .btn-actions button {
   margin: 4px;
 }
+
+/* Trimesters */
+.trimesters-content span, .trimesters-content td, .trimesters-content th, .trimesters-content div {
+  font-size: 0.75rem;
+}
+.trimesters-content .header {
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  height: 10%;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.trimesters-content .header span {
+  font-size: 1.12rem;
+  font-weight: 600;
+}
+.trimesters-content .table-wrapper {
+  width: 100%;
+  height: 90%;
+  max-height: 80%;
+  overflow: auto;
+}
+.trimesters-content .table-wrapper table tbody {
+  overflow: auto;
+}
+.trimesters-content .table-wrapper table th,  .trimesters-content .table-wrapper table td {
+  text-align: center;
+  vertical-align: middle;
+}
+.trimesters-content .btn-actions {
+  display: flex;
+  flex-direction: row;
+}
+.trimesters-content .btn-actions button {
+  margin: 4px;
+}

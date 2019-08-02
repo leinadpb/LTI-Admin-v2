@@ -77,6 +77,33 @@ const getTrimesters = () => {
     return docs;
   }).lean();
 }
+const determineTrimesterCustomId = (trimester) => {
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  let startDate = new Date(trimester.start);
+  let endDate = new Date(trimester.ends);
+  let startMonth = monthNames[startDate.getMonth()];
+  let endMonth = monthNames[endDate.getMonth()];
+  let finishYear = endDate.getFullYear();
+  return `${startMonth[0].toUpperCase()}-${endMonth[0].toUpperCase()}-${finishYear}`;
+}
+const updateTrimester = (trimester) => {
+  let sanitazed = {
+    name: trimester.name,
+    start: new Date(trimester.start),
+    ends: new Date(trimester.ends),
+    lastModified: undefined,
+    customId: determineTrimesterCustomId(trimester),
+  };
+  return TrimesterModel.updateOne({customId: trimester.customId}, sanitazed, (err, doc) => {
+    if (!!err) {
+      console.log('Error update trimester: ', err);
+      return null;
+    }
+    return doc;
+  });
+}
 const getCurrentTrimester = () => {
   const todayDate = Date.now();
   return TrimesterModel.find({
@@ -288,4 +315,5 @@ module.exports = {
   addRule,
   updateRulesNumbers,
   updateRuleByText,
+  updateTrimester,
 }
