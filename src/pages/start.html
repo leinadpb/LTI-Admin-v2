@@ -164,6 +164,7 @@
         justify-content: center;
         align-items: center;
         display: none;
+        
       }
       .trimesters-content {
         grid-area: main;
@@ -202,13 +203,23 @@
         justify-content: center;
         align-items: center;
         display: none;
+        
+       
       }
       .config-normas{
         width: 50%;
-        height: 50%;
+        
+        
         
       }
-      
+      .config-encuestas {
+        width: 40%;
+       
+        
+        
+       
+      }
+     
 
       .config-title {
       margin: 2%;
@@ -266,30 +277,7 @@
      .config-content .checkbox label:hover {
        background: rgba(19, 128, 190, 0.1);
      }
-     /* circulo
-     .config-content .checkbox label:before {
-       content: "";
-       width: 17px;
-       height: 17px;
-       display:inline-block;
-       background: none;
-       border: 3px solid rgb(29, 27, 27);
-       border-radius: 50%;
-       position: absolute;
-       left: 17px;
-       top:4px;
-
-     * border rojo *
-     .config-content .checkbox label:before {
-       border-radius: 3px;
-     }
-     .config-content input[type="checkbox"]:checked + label {
-       padding:5px 15px;
-       background: #911313;
-       border-radius: 10px;
-       color: #fff;
-     }
-     */
+    
 
     .comments {margin: 10px;}
     .text-comments {
@@ -565,7 +553,11 @@
         </div>
       </div>
       <div class="config-content" id="config">
+
         <h2 class ="config-title">Configuraciones</h2>
+        <!--Columns 1-->
+
+        <!--Normas-->
         <div class="config-normas">
           <h3 class="rules-title">Normas</h3>
           <hr>
@@ -601,6 +593,24 @@
                   </select>
               </div>
         </div>
+
+        <!--Columns 2-->
+        <div class="config-encuestas">
+            <h3 class="rules-title">Encuestas</h3>
+
+            <select class="select">
+                <option value="0">Seleccione</option>
+                <option value="Send To OneNote 16">Send To OneNote 16</option>
+                <option value="OneNote">OneNote</option>
+                <option value="PrimoPDF">PrimoPDF</option>
+                <option value="Microsoft XPS Document Writer">Microsoft XPS Document Writer</option>
+                <option value="Microsoft Print to PDF">Microsoft Print to PDF</option>
+                <option value="LABTIPrinter">LABTIPrinter</option>
+                <option value="Fax">Fax</option>
+              </select>
+          </div>
+
+
       </div>
     <script>
       const ipcRenderer = require('electron').ipcRenderer;
