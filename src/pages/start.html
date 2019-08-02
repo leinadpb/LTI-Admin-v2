@@ -553,15 +553,17 @@
         </div>
       </div>
       <div class="config-content" id="config">
-
-        <h2 class ="config-title">Configuraciones</h2>
-        <!--Columns 1-->
-
-        <!--Normas-->
+        <div class="header-config">
+          <h2>Configuraciones</h2>
+        </div>
         <div class="config-normas">
-          <h3 class="rules-title">Normas</h3>
-          <hr>
-          <!--Checkbox-->
+          <!--Columns 1-->
+          <div class="left-side">
+            <div class="left-side-header">
+              <h3 class="rules-title">Normas</h3>
+              <hr>
+            </div>
+            <!--Checkbox-->
             <div class="checkbox">
               <input type="checkbox" class="normas"  id="checkbox1">
               <label for="checkbox1">Permitir aceptar las normas del laboratorio</label>
@@ -578,39 +580,39 @@
               <textarea name="mensaje" id="recordatorio"  placeholder="Las violaciones a cualquiera de estas normas pueden acarrear sanciones académicas."></textarea>
             </div>
             <!--Printer-->
-              <div class="printer">
-                <h3 class="rules-title">Impresora</h3>
-                <hr>
-                  <select class="select">
-                    <option value="0">Seleccione</option>
-                    <option value="Send To OneNote 16">Send To OneNote 16</option>
-                    <option value="OneNote">OneNote</option>
-                    <option value="PrimoPDF">PrimoPDF</option>
-                    <option value="Microsoft XPS Document Writer">Microsoft XPS Document Writer</option>
-                    <option value="Microsoft Print to PDF">Microsoft Print to PDF</option>
-                    <option value="LABTIPrinter">LABTIPrinter</option>
-                    <option value="Fax">Fax</option>
-                  </select>
-              </div>
-        </div>
-
-        <!--Columns 2-->
-        <div class="config-encuestas">
-            <h3 class="rules-title">Encuestas</h3>
-
-            <select class="select">
-                <option value="0">Seleccione</option>
-                <option value="Send To OneNote 16">Send To OneNote 16</option>
-                <option value="OneNote">OneNote</option>
-                <option value="PrimoPDF">PrimoPDF</option>
-                <option value="Microsoft XPS Document Writer">Microsoft XPS Document Writer</option>
-                <option value="Microsoft Print to PDF">Microsoft Print to PDF</option>
-                <option value="LABTIPrinter">LABTIPrinter</option>
-                <option value="Fax">Fax</option>
-              </select>
+            <div class="printer">
+              <h3 class="rules-title">Impresora</h3>
+              <hr>
+                <select class="select">
+                  <option value="0">Seleccione</option>
+                  <option value="Send To OneNote 16">Send To OneNote 16</option>
+                  <option value="OneNote">OneNote</option>
+                  <option value="PrimoPDF">PrimoPDF</option>
+                  <option value="Microsoft XPS Document Writer">Microsoft XPS Document Writer</option>
+                  <option value="Microsoft Print to PDF">Microsoft Print to PDF</option>
+                  <option value="LABTIPrinter">LABTIPrinter</option>
+                  <option value="Fax">Fax</option>
+                </select>
+            </div>
           </div>
-
-
+          
+          <!--Columns 2-->
+          <div class="right-side">
+            <div class="config-encuestas">
+              <h3 class="rules-title">Encuestas</h3>
+              <select class="select">
+                  <option value="0">Seleccione</option>
+                  <option value="Send To OneNote 16">Send To OneNote 16</option>
+                  <option value="OneNote">OneNote</option>
+                  <option value="PrimoPDF">PrimoPDF</option>
+                  <option value="Microsoft XPS Document Writer">Microsoft XPS Document Writer</option>
+                  <option value="Microsoft Print to PDF">Microsoft Print to PDF</option>
+                  <option value="LABTIPrinter">LABTIPrinter</option>
+                  <option value="Fax">Fax</option>
+                </select>
+            </div>
+          </div>
+        </div>
       </div>
     <script>
       const ipcRenderer = require('electron').ipcRenderer;
