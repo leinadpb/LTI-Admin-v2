@@ -149,6 +149,28 @@ const openMain = (initData) => {
     child.loadFile(path.join(__dirname, 'pages', `${settings.PAGES.editTrimesterPage}.html`));
     child.show();
   });
+  ipcMain.on('open-add-trimester', async(e, args) => {
+    let child = new BrowserWindow({ 
+      parent: window,
+      width: 480,
+      height: 480,
+      webPreferences: {
+        nodeIntegration: true,
+        nativeWindowOpen: true
+      },
+      frame: false,
+    });
+    ipcMain.on('add-trimester-request-save', async(e, args) => {
+      let trimester = args.newTrimester;
+      console.log('to add >>', trimester);
+      await queries.addTrimester(trimester);
+      let trimesters = await queries.getTrimesters();
+      // child.close();
+      e.reply('refresh-trimesters', {trimesters: trimesters});
+    })
+    child.loadFile(path.join(__dirname, 'pages', `${settings.PAGES.addTrimesterPage}.html`));
+    child.show();
+  });
   global.window = window;
   window.loadFile(path.join(__dirname, 'pages', `${settings.PAGES.startPage}.html`));
   window.on('close', () => {

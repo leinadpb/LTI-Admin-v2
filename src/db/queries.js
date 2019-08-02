@@ -93,12 +93,28 @@ const updateTrimester = (trimester) => {
     name: trimester.name,
     start: new Date(trimester.start),
     ends: new Date(trimester.ends),
-    lastModified: undefined,
+    lastModified: new Date(),
     customId: determineTrimesterCustomId(trimester),
   };
   return TrimesterModel.updateOne({customId: trimester.customId}, sanitazed, (err, doc) => {
     if (!!err) {
       console.log('Error update trimester: ', err);
+      return null;
+    }
+    return doc;
+  });
+}
+const addTrimester = (trimester) => {
+  let sanitazed = {
+    name: trimester.name,
+    start: new Date(trimester.start),
+    ends: new Date(trimester.ends),
+    lastModified: undefined,
+    customId: determineTrimesterCustomId(trimester),
+  };
+  return TrimesterModel.create(sanitazed, (err, doc) => {
+    if (!!err) {
+      console.log('Error adding trimester: ', err);
       return null;
     }
     return doc;
@@ -316,4 +332,5 @@ module.exports = {
   updateRulesNumbers,
   updateRuleByText,
   updateTrimester,
+  addTrimester,
 }

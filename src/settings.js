@@ -4,7 +4,7 @@ const PAGES = {
   deleteRulesPage: 'deleteRule',
   addRulePage: 'addRule',
   editTrimesterPage: 'editTrimester',
-  addTrimesterPage: 'addTrimesterPage'
+  addTrimesterPage: 'addTrimester'
 }
 
 const CONFIGS = {
