@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Crear regla</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" >
+    <style>
+      .page-wrapper {
+        width: 100%;
+        height: 100vh;
+        display: grid;
+        grid-template-columns: auto;
+        grid-template-rows: 4fr 1fr;
+      }
+      .trimester-content {
+        width: 100%;
+        height: 100%;
+        padding: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .actions-btns {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        padding: 16px;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .actions-btns button {
+        margin: 8px;
+      }
+
+      .info-group {
+        width: 85%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <div class="page-wrapper">
+        <div class="trimester-content">
+          <div class="info-group">
+            <div><span>Intec ID</span></div>
+            <input id="intec-id" value="" type="text" class="form-control" disabled />
+          </div>
+          <div class="info-group">
+            <div><span>Nombre completo</span></div>
+            <input id="full-name" value="" type="text" class="form-control" disabled />
+          </div>
+          <div class="info-group">
+            <div><span>Dominio</span></div>
+            <input id="domain" value="" type="text" class="form-control" disabled />
+          </div>
+        </div>
+        <div class="actions-btns">
+          <button class="btn btn-secondary" onclick="cancel()">Cancelar</button>
+          <button class="btn btn-primary" onclick="save()">Seguro, Eliminar</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      const ipcRenderer = require('electron').ipcRenderer;
+      const remote = require('electron').remote;
+      const mongoose = require('mongoose');
+      let windowData = undefined;
+      ipcRenderer.send('delete-admin-request-data', {});
+      ipcRenderer.on('delete-admin-response-data', (e, args) => {
+        windowData = args;
+        console.log('window data >>>', windowData);
+        document.getElementById('full-name').value = windowData.admin.fullName;
+        document.getElementById('domain').value = windowData.admin.domain;
+        document.getElementById('intec-id').value = windowData.admin.intecId;
+      });
+      ipcRenderer.on('refresh-admins', (e, args) => {
+        let mainWindow = remote.getGlobal('window');
+        console.log('main window >>>', mainWindow);
+        if (mainWindow) mainWindow.webContents.send('refresh-admins', args.admins);
+        window.close();
+      })
+      function cancel() {
+        window.close();
+      }
+      function save() {
+        ipcRenderer.send('delete-admin-request-save', {newAdmin: { 
+          intecId: document.getElementById('intec-id').value,
+          fullName: document.getElementById('full-name').value,
+          domain: document.getElementById('domain').value,
+          mongoId: windowData.admin._id
+        }});
+      }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  </body>
+</html>

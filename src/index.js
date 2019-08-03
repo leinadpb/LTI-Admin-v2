@@ -171,6 +171,84 @@ const openMain = (initData) => {
     child.loadFile(path.join(__dirname, 'pages', `${settings.PAGES.addTrimesterPage}.html`));
     child.show();
   });
+
+  // Administrators Dialogs
+  ipcMain.on('open-edit-admin', async(e, args) => {
+    let data = args;
+    ipcMain.on('edit-admin-request-data', async(e, args) => {
+      e.reply('edit-admin-response-data', data);
+    })
+    let child = new BrowserWindow({ 
+      parent: window,
+      width: 480,
+      height: 480,
+      webPreferences: {
+        nodeIntegration: true,
+        nativeWindowOpen: true
+      },
+      frame: false,
+    });
+    ipcMain.on('edit-admin-request-save', async(e, args) => {
+      let admin = args.newAdmin;
+      console.log('to edit >>', admin);
+      await queries.updateBlackListUser(admin);
+      let admins = await queries.getBlackListUsers();
+      // child.close();
+      e.reply('refresh-admins', {admins: admins});
+    })
+    child.loadFile(path.join(__dirname, 'pages', `${settings.PAGES.editAdminPage}.html`));
+    child.show();
+  });
+  ipcMain.on('open-delete-admin', async(e, args) => {
+    let data = args;
+    ipcMain.on('delete-admin-request-data', async(e, args) => {
+      e.reply('delete-admin-response-data', data);
+    })
+    let child = new BrowserWindow({ 
+      parent: window,
+      width: 480,
+      height: 480,
+      webPreferences: {
+        nodeIntegration: true,
+        nativeWindowOpen: true
+      },
+      frame: false
+    });
+    ipcMain.on('delete-admin-request-save', async(e, args) => {
+      let admin = args.newAdmin;
+      console.log('to delete >>', admin);
+      await queries.deleteBlackListUser(admin);
+      let admins = await queries.getBlackListUsers();
+      // child.close();
+      e.reply('refresh-admins', {admins: admins});
+    })
+    child.loadFile(path.join(__dirname, 'pages', `${settings.PAGES.deleteAdminPage}.html`));
+    child.show();
+  });
+  ipcMain.on('open-add-admins', async(e, args) => {
+    let data = args;
+    let child = new BrowserWindow({ 
+      parent: window,
+      width: 480,
+      height: 480,
+      webPreferences: {
+        nodeIntegration: true,
+        nativeWindowOpen: true
+      },
+      frame: false
+    });
+    ipcMain.on('add-admin-request-save', async(e, args) => {
+      let admin = args.newAdmin;
+      let existingAdmins = await queries.getBlackListUsers();
+      console.log('to create >>', admin);
+      await queries.addBlackListUser(admin);
+      existingAdmins.push(admin); // append created admin
+      // child.close();
+      e.reply('refresh-admins', {admins: existingAdmins});
+    })
+    child.loadFile(path.join(__dirname, 'pages', `${settings.PAGES.addAdminPage}.html`));
+    child.show();
+  });
   global.window = window;
   window.loadFile(path.join(__dirname, 'pages', `${settings.PAGES.startPage}.html`));
   window.on('close', () => {

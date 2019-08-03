@@ -5,6 +5,7 @@ const HistoryStudentModel = require('../models/historyStudent');
 const HistoryTeacherModel = require('../models/historyTecher');
 const BlackListModel = require('../models/blackList');
 const SubjectModel = require('../models/subject');
+const mongoose = require('mongoose');
 
 // CONFIGS
 const getConfigs = () => {
@@ -274,24 +275,32 @@ const getUser = (intecId, domain) => {
 const getBlackListUsers = () => {
   return BlackListModel.find({}, (err, docs) => {
     if (!!err) {
-      console.log('Error retreiving Trimesters: ', err);
+      console.log('Error retreiving admins: ', err);
       return null;
     }
     return docs;
   }).lean();
 }
-const addBlackListUser = (intecId, domain) => {
-  return BlackListModel.create({intecId: intecId, domain: domain}, (err) => {
+const addBlackListUser = (user) => {
+  return BlackListModel.create(user, (err) => {
     if (!!err) {
-      console.log('Error retreiving Trimesters: ', err);
+      console.log('Error adding admin: ', err);
       return null;
     }
   });
 }
-const deleteBlackListUser = (intecId) => {
-  return BlackListModel.findOneAndDelete({intecId: intecId}, (err) => {
+const deleteBlackListUser = (user) => {
+  return BlackListModel.findOneAndDelete({_id: mongoose.Types.ObjectId(user.mongoId.id)}, (err) => {
     if (!!err) {
-      console.log('Error retreiving Trimesters: ', err);
+      console.log('Error deleting admin: ', err);
+      return null;
+    }
+  });
+}
+const updateBlackListUser = (user) => {
+  return BlackListModel.findOneAndUpdate({_id: mongoose.Types.ObjectId(user.mongoId.id)}, user, (err) => {
+    if (!!err) {
+      console.log('Error updating admin: ', err);
       return null;
     }
   });
@@ -322,6 +331,7 @@ module.exports = {
   getBlackListUsers,
   addBlackListUser,
   deleteBlackListUser,
+  updateBlackListUser,
   getUser,
   getHistoryStudents,
   getSubjects,

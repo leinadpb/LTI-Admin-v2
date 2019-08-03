@@ -94,23 +94,28 @@ const trimesters = [
 const blackListedUsers = [
   {
     intecId: '1066359',
-    domain: 'intec'
+    domain: 'intec',
+    fullName: 'Daniel Jose Pena Berroa'
   },
   {
     intecId: 'angelo.paredes',
-    domain: 'intecadm'
+    domain: 'intecadm',
+    fullName: 'Angelo Paredes'
   },
   {
     intecId: 'katia.sanchez',
-    domain: 'intecadm'
+    domain: 'intecadm',
+    fullName: 'Katia Sanches Mercedes'
   },
   {
     intecId: 'leensan.chong',
-    domain: 'intecadm'
+    domain: 'intecadm',
+    fullName: 'Leensan Chong Fernandez'
   },
   {
     intecId: 'ppgdeveloper2',
-    domain: 'intec'
+    domain: 'intec',
+    fullName: 'Mac Daniel Computer'
   }
 ];
 

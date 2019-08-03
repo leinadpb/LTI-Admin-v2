@@ -125,6 +125,46 @@
   margin: 4px;
 }
 
+/* Administradores */
+.admins-content span, .admins-content td, .admins-content th, .admins-content div {
+  font-size: 0.75rem;
+}
+.admins-content .header {
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  height: 15%;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.admins-content .header span {
+  font-size: 1.12rem;
+  font-weight: 600;
+}
+.admins-content .table-wrapper {
+  width: 100%;
+  height: 90%;
+  max-height: 80%;
+  overflow: auto;
+}
+.admins-content .table-wrapper table tbody {
+  overflow: auto;
+}
+.admins-content .table-wrapper table th,  .admins-content .table-wrapper table td {
+  text-align: center;
+  vertical-align: middle;
+}
+.admins-content .btn-actions {
+  display: flex;
+  flex-direction: row;
+}
+.admins-content .btn-actions button {
+  margin: 4px;
+}
+
 
 /* Configuration */
 .config-content .config-normas {

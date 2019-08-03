@@ -175,6 +175,15 @@
         align-items: center;
         display: none;
       }
+      .admins-content {
+        grid-area: main;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        display: none;
+      }
 
       .main-content {
                 
@@ -366,6 +375,14 @@
               </span>
             </div>
           </div>
+          <div class="menu-option" onclick="menuOptionClick(this, 'admins')">
+            <div class="menu-option-indicator-off"></div>
+            <div class="menu-option-label">
+              <span>
+                Administradores
+              </span>
+            </div>
+          </div>
           <div class="menu-option" onclick="menuOptionClick(this, 'config')">
             <div class="menu-option-indicator-off"></div>
             <div class="menu-option-label" id="settings">
@@ -552,6 +569,28 @@
           </table>
         </div>
       </div>
+      <div class="admins-content" id="admins">
+        <div class="header">
+          <div>
+            <span style="margin-right: 16px;">Administradores</span>
+            <button class="btn btn-primary btn-sm" onclick="createAdmin()">Crear</button>
+          </div>
+          <div style="margin-top: 12px; margin-bottom: 12px;">
+            <span style="font-size: 0.7rem; font-style: italic;">Estos usuarios son los únicos que podrán acceder a este software y al loguearse en cada computador, NO se le aparecerá el software de las normas y encuestas.</span>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+              <th>Intec ID</th>
+              <th>Full Name</th>
+              <th>Domain</th>
+              <th></th>
+            </thead>
+            <tbody id="admins-data" class="table-striped"></tbody>
+          </table>
+        </div>
+      </div>
       <div class="config-content" id="config">
         <div class="header-config">
           <h2>Configuraciones</h2>
@@ -629,6 +668,7 @@
       const studentFields = ['intecId', 'name', 'subject', 'teacher', 'section', 'trimesterName'];
       const rulesFields = ['number', 'text', 'actions'];
       const trimestersFields = ['start', 'ends', 'name', 'actions'];
+      const adminsFields = ['intecId', 'fullName', 'domain', 'actions'];
 
       let windowData = undefined;
       ipcRenderer.send('main-request-data', {});
@@ -640,6 +680,7 @@
         getUnfilteredData();
         getRulesData();
         getTrimesterData();
+        getAdminsData();
         setSelectData('subject-list', windowData.subjects.map(x => {
           return {
             value: x.code,
@@ -675,7 +716,7 @@
       })
 
       // Functions
-      const options = ['home', 'survey', 'signs', 'rules', 'trimesters', 'config'];
+      const options = ['home', 'survey', 'signs', 'rules', 'trimesters', 'admins', 'config'];
       function menuOptionClick(e, key) {
         options.forEach(opt => {
           document.getElementById(opt).style.display = "none";
@@ -795,6 +836,63 @@
                 td.innerHTML = s[field];
               }
               
+            }
+            tr.appendChild(td);
+          }
+          data.appendChild(tr);
+        }
+      }
+
+      // Admins
+      function sortAdmins(a, b) {
+        return new Date(a.fullName) - new Date(b.fullName);
+      }
+      ipcRenderer.on('refresh-admins', (e, args) => {
+        console.log('refreshing admins >>> ', args);
+        renderAdminsTable('admins-data', args.sort(sortAdmins), adminsFields);
+      })
+      const createAdmin = () => {
+        ipcRenderer.send('open-add-admins', {});
+      }
+      const getAdminsData = () => {
+        let admins = windowData.admins.sort(sortAdmins);
+        renderAdminsTable('admins-data', admins, adminsFields);
+      }
+      function renderAdminsTable(_id, results, fields) {
+        let data = document.getElementById(_id);
+        // Clean list
+        while (data.firstChild) {
+          data.removeChild(data.firstChild);
+        } // End cleaning
+        for(let i = 0; i < results.length; i++) {
+          let s = results[i];
+          let tr = document.createElement('tr');
+          for(let j = 0; j < fields.length; j++) {
+            let field = fields[j];
+            let td = document.createElement('td');
+            td.align = "center";
+            if (field === 'actions') {
+              let editBtn = document.createElement('button');
+              let deleteBtn = document.createElement('button');
+              editBtn.classList = "btn btn-secondary btn-sm";
+              editBtn.onclick = () => {
+                ipcRenderer.send('open-edit-admin', {admin: results[i]});
+                console.log('Will edit admin: ', results[i]);
+              }
+              editBtn.innerHTML = "Editar";
+              deleteBtn.classList = "btn btn-secondary btn-sm";
+              deleteBtn.onclick = () => {
+                ipcRenderer.send('open-delete-admin', {admin: results[i]});
+                console.log('Will remove admin: ', results[i]);
+              }
+              deleteBtn.innerHTML = "Eliminar";
+              let btnsWrapper = document.createElement('div');
+              btnsWrapper.classList = "btn-actions";
+              btnsWrapper.appendChild(editBtn);
+              btnsWrapper.appendChild(deleteBtn);
+              td.appendChild(btnsWrapper);
+            } else {
+              td.innerHTML = s[field];
             }
             tr.appendChild(td);
           }
