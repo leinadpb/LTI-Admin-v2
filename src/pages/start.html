@@ -213,7 +213,7 @@
         
       }
       .config-encuestas {
-        width: 40%;
+        width: 100%;
        
         
         
@@ -284,7 +284,20 @@
       margin:15px;
       font-size: 15px;  
     }
-    textarea{
+    .link-surveys {
+      margin: 30px;
+
+    };
+    .link-encuesta {
+     
+     border-radius: 5px;
+       font-family: arial;
+       min-height: 25px;
+       max-height: 25px;
+       min-width: 80%;
+       max-width: 100%;
+    }
+    .message{
       border-radius: 5px;
       font-family: arial;
       min-height: 50px;
@@ -299,10 +312,8 @@
       margin:10px;
       
     };
-
-   
-
-
+    
+  
       /* Media queries */
 
     </style>
@@ -577,7 +588,7 @@
             <!--comment box-->
             <div class="comments">
               <p class="text-comments">Mensaje en el recordatorio:</p>
-              <textarea name="mensaje" id="recordatorio"  placeholder="Las violaciones a cualquiera de estas normas pueden acarrear sanciones académicas."></textarea>
+              <textarea  class= "message" name="mensaje" id="recordatorio"  placeholder="Las violaciones a cualquiera de estas normas pueden acarrear sanciones académicas."></textarea>
             </div>
             <!--Printer-->
             <div class="printer">
@@ -600,16 +611,18 @@
           <div class="right-side">
             <div class="config-encuestas">
               <h3 class="rules-title">Encuestas</h3>
-              <select class="select">
-                  <option value="0">Seleccione</option>
-                  <option value="Send To OneNote 16">Send To OneNote 16</option>
-                  <option value="OneNote">OneNote</option>
-                  <option value="PrimoPDF">PrimoPDF</option>
-                  <option value="Microsoft XPS Document Writer">Microsoft XPS Document Writer</option>
-                  <option value="Microsoft Print to PDF">Microsoft Print to PDF</option>
-                  <option value="LABTIPrinter">LABTIPrinter</option>
-                  <option value="Fax">Fax</option>
-                </select>
+              <hr>
+              <!--Checkbox-->
+              <div class="input-e">
+                <input type="checkbox" class="normas"  id="checkbox4">
+                <label for="checkbox4">Permitir aceptar las normas del laboratorio</label>
+              </div>
+              <!--Link-->
+              <div class="link-surveys">
+                <p class="text-e">Link de la encuesta para estudiantes:</p>
+                <textarea class="link-encuesta" name="Link" id="link-encuesta"  placeholder="Encuesta."></textarea>
+              </div>
+
             </div>
           </div>
         </div>
