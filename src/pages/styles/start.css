@@ -169,6 +169,7 @@
 /* Configuration */
 .config-content .config-normas {
   width: 100%;
+  height: 70%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -183,4 +184,23 @@
   padding: 16px;
   margin-top: 16px;
   margin-left: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.config-content .right-side {
+  height: 100%;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.config-content input {
+  width: 100%;
+  padding: 4px 12px;
+  margin-bottom: 16px;
+}
+#save-result-config {
+  display: none;
 }

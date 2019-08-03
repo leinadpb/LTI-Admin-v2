@@ -21,6 +21,26 @@ const AppConfigs = [
   {
     key: settings.CONFIGS.teacherUrl,
     value: 'https://stackoverflow.com/questions/40332455/mongoose-query-by-date/40332542'
+  },
+  {
+    key: settings.CONFIGS.showRulesReminder,
+    value: true
+  },
+  {
+    key: settings.CONFIGS.allowSelectCustomData,
+    value: true
+  },
+  {
+    key: settings.CONFIGS.reminderText,
+    value: 'Reminder text....'
+  },
+  {
+    key: settings.CONFIGS.activateTeacherSurvey,
+    value: true
+  },
+  {
+    key: settings.CONFIGS.activateStudentSurvey,
+    value: true
   }
 ];
 

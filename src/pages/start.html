@@ -534,7 +534,7 @@
         </div>
       </div>
       <div class="survey-content" id="survey">
-        Survey content
+        <div style="padding: 32px;">Aquí mostraremos resultados de las encuestas realizadas por trimestres. <b>Aún no está disponible.</b></div>
       </div>
       <div class="rules-content" id="rules">
         <div class="header">
@@ -594,6 +594,9 @@
       <div class="config-content" id="config">
         <div class="header-config">
           <h2>Configuraciones</h2>
+          <div id="save-result-config">
+            <span style="font-size: 0.78rem;">Estas configuraciones se han guardado con satisfactoriamente!</span>
+          </div>
         </div>
         <div class="config-normas">
           <!--Columns 1-->
@@ -604,25 +607,25 @@
             </div>
             <!--Checkbox-->
             <div class="checkbox">
-              <input type="checkbox" class="normas"  id="checkbox1">
-              <label for="checkbox1">Permitir aceptar las normas del laboratorio</label>
+              <input type="checkbox" class="normas"  id="SHOW_SURVEY">
+              <label for="SHOW_SURVEY">Permitir aceptar las normas del laboratorio</label>
               <br>
-              <input type="checkbox" class="normas"  id="checkbox2">
-              <label for="checkbox2">Permitir seleccionar asignatura y/o profesor.</label>
+              <input type="checkbox" class="normas"  id="ALLOW_SELECT_CUSTOM_DATA">
+              <label for="ALLOW_SELECT_CUSTOM_DATA">Permitir seleccionar asignatura y/o profesor.</label>
               <br>
-              <input type="checkbox" class="normas"  id="checkbox3" for="checkbox3">
-              <label for="checkbox3">Mostrar recordatorio de las tres normas principales.</label>
+              <input type="checkbox" class="normas"  id="SHOW_RULE_REMINDER">
+              <label for="SHOW_RULE_REMINDER">Mostrar recordatorio de las tres normas principales.</label>
             </div>
             <!--comment box-->
             <div class="comments">
               <p class="text-comments">Mensaje en el recordatorio:</p>
-              <textarea  class= "message" name="mensaje" id="recordatorio"  placeholder="Las violaciones a cualquiera de estas normas pueden acarrear sanciones académicas."></textarea>
+              <textarea class= "message" name="mensaje" id="REMINDER_TEXT"></textarea>
             </div>
             <!--Printer-->
             <div class="printer">
               <h3 class="rules-title">Impresora</h3>
               <hr>
-                <select class="select">
+                <select id="printer-list" class="select">
                   <option value="0">Seleccione</option>
                   <option value="Send To OneNote 16">Send To OneNote 16</option>
                   <option value="OneNote">OneNote</option>
@@ -642,22 +645,24 @@
               <hr>
               <!--Checkbox-->
               <div class="input-e">
-                <input type="checkbox" class="normas"  id="checkbox4">
-                <label for="checkbox4">Activar encuesta para estudiantes.</label>
+                <input type="checkbox" class="normas"  id="ACTIVATE_STUDENT_SURVEY">
+                <label for="ACTIVATE_STUDENT_SURVEY">Activar encuesta para estudiantes.</label>
               </div>
               <!--Link-->
               <div class="link-surveys">
-                <textarea class="link-encuesta" name="Link" id="link-encuesta"  placeholder="Link de la encuesta para estudiantes:"></textarea>
+                <input type="text" class="link-encuesta" name="Link" id="STUDENT_URL" />
               </div>
               <!--Checkbox-->
               <div class="input-e">
-                <input type="checkbox" class="normas"  id="checkbox5">
-                <label for="checkbox5">Activar encuesta para profesores.</label>
+                <input type="checkbox" class="normas"  id="ACTIVATE_TEACHER_SURVEY">
+                <label for="ACTIVATE_TEACHER_SURVEY">Activar encuesta para profesores.</label>
               </div>
               <div class="surveys-teacher">
-                <textarea class="link-encuesta" name="Link" id="link-encuesta"  placeholder="Link de la encuesta para profesores:"></textarea>
+                <input class="link-encuesta" type="text" name="Link" id="TEACHER_URL" />
               </div>
-              <button type="submit" class="btn btn-danger">Guardar Cambios</button>
+            </div>
+            <div>
+              <button class="btn btn-primary btn-lg" onclick="savePreferences()">Guardar cambios</button>
             </div>
           </div>
         </div>
@@ -669,9 +674,17 @@
       const rulesFields = ['number', 'text', 'actions'];
       const trimestersFields = ['start', 'ends', 'name', 'actions'];
       const adminsFields = ['intecId', 'fullName', 'domain', 'actions'];
+      const settings = require('../settings');
 
       let windowData = undefined;
       ipcRenderer.send('main-request-data', {});
+      ipcRenderer.on('save-preferences-success', (e, args) => {
+        let saveresult = document.getElementById('save-result-config');
+        saveresult.style.display = 'block';
+        setTimeout(() => {
+          saveresult.style.display = 'none';
+        }, 3000);
+      });
       ipcRenderer.on('main-request-data-response', (e, args) => {
         windowData = args;
         document.getElementById('user-label').innerHTML = windowData.user.name;
@@ -708,6 +721,7 @@
             text: x.name,
           }
         }));
+        setPreferences();
       });
       ipcRenderer.on('fetch-students-response', (e, args) => {
         let students = args;
@@ -728,6 +742,71 @@
         }
         document.getElementById(key).style.display = "inline-block";
         e.children[0].style.background = "#b51818";
+      }
+
+      // Configurations
+      const setPreferences = () => {
+        let configs = windowData.configs;
+        const trueFalseValues = [settings.CONFIGS.activateStudentSurvey, settings.CONFIGS.activateTeacherSurvey, settings.CONFIGS.showSurvey, settings.CONFIGS.isFullscreen, settings.CONFIGS.allowSelectCustomData, settings.CONFIGS.showRulesReminder];
+        console.log('configurations >>>', configs)
+        for(let i = 0; i < configs.length; i++) {
+          let config = configs[i];
+          let obj = document.getElementById(config.key);
+          if (!!obj) {
+            if (trueFalseValues.indexOf(config.key) >= 0) {
+              // If its a true or false value
+              console.log('will check >>', config);
+              obj.checked = (config.value.toLowerCase() === "true") ? true : false;
+            } else {
+              obj.value = config.value;
+            }
+          }
+        }
+      }
+      function savePreferences() {
+        let reminderText = document.getElementById(settings.CONFIGS.reminderText);
+        let surveyStudentUrl = document.getElementById(settings.CONFIGS.studentUrl);
+        let surveyTeacherUrl = document.getElementById(settings.CONFIGS.teacherUrl);
+        let showSurvey = document.getElementById(settings.CONFIGS.showSurvey);
+        let showRulesReminder = document.getElementById(settings.CONFIGS.showRulesReminder);
+        let allowSelectCustomData = document.getElementById(settings.CONFIGS.allowSelectCustomData);
+        let activateStudentSurvey = document.getElementById(settings.CONFIGS.activateStudentSurvey);
+        let activateTeacherSurvey = document.getElementById(settings.CONFIGS.activateTeacherSurvey);
+        let newPreferences = [
+          {
+            key: settings.CONFIGS.reminderText,
+            value: !!reminderText ? reminderText.value : '',
+          },
+          {
+            key: settings.CONFIGS.studentUrl,
+            value: !!surveyStudentUrl ? surveyStudentUrl.value : '',
+          },
+          {
+            key: settings.CONFIGS.teacherUrl,
+            value: !!surveyTeacherUrl ? surveyTeacherUrl.value : '',
+          },
+          {
+            key: settings.CONFIGS.showRulesReminder,
+            value: !!showRulesReminder ? showRulesReminder.checked : false,
+          },
+          {
+            key: settings.CONFIGS.allowSelectCustomData,
+            value: !!allowSelectCustomData ? allowSelectCustomData.checked : false,
+          },
+          {
+            key: settings.CONFIGS.activateStudentSurvey,
+            value: !!activateStudentSurvey ? activateStudentSurvey.checked : false,
+          },
+          {
+            key: settings.CONFIGS.activateTeacherSurvey,
+            value: !!activateTeacherSurvey ? activateTeacherSurvey.checked : false,
+          },
+          {
+            key: settings.CONFIGS.showSurvey,
+            value: !!showSurvey ? showSurvey.checked : false,
+          },
+        ];
+        ipcRenderer.send('save-preferences', { newPreferences: newPreferences });
       }
 
       // Rules

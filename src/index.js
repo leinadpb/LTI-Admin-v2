@@ -24,7 +24,7 @@ let canQuitApp = false;
 const openMain = (initData) => {
   window = new BrowserWindow({
     width: 1280,
-    height: 720,
+    height: 780,
     webPreferences: {
       nodeIntegration: true,
       nativeWindowOpen: true
@@ -39,6 +39,11 @@ const openMain = (initData) => {
   ipcMain.on('fetch-students', async (e, args) => {
     let studentsResult = await queries.getHistoryStudentsFiltered(args.filterObject);
     e.reply('fetch-students-response', studentsResult);
+  })
+  ipcMain.on('save-preferences', async (e, args) => {
+    let preferences = args.newPreferences;
+    await queries.updatePreferences(preferences);
+    e.reply('save-preferences-success', {});
   })
 
   // Rules Dialogs
@@ -292,6 +297,7 @@ app.on('ready', async () => {
     showSurvey: configs.find(cfg => cfg.key === settings.CONFIGS.showSurvey).value,
     studentUrl: configs.find(cfg => cfg.key === settings.CONFIGS.studentUrl).value,
     teacherUrl: configs.find(cfg => cfg.key === settings.CONFIGS.teacherUrl).value,
+    reminderText: configs.find(cfg => cfg.key === settings.CONFIGS.reminderText).value,
   }
 
   const user = {
@@ -303,6 +309,7 @@ app.on('ready', async () => {
     user: user,
     admins: blackListedUsers,
     preferences: APP_PREFERENCES,
+    configs: configs,
     trimesters: trimesters,
     currentTrimester: currentTrimester,
     allStudents: allStudents,

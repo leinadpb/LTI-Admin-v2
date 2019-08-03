@@ -17,6 +17,22 @@ const getConfigs = () => {
     return docs;
   }).lean();
 }
+const updateConfig = (config) => {
+  return ConfigModel.findOneAndUpdate({key: config.key}, config, (err, doc) => {
+    if (!!err) {
+      console.log('Error updating config: ', err);
+      return null;
+    }
+    return doc;
+  }).lean();
+}
+const updatePreferences = async (preferences) => {
+  console.log('preferences >>', preferences);
+  for(let i= 0; i < preferences.length; i++) {
+    console.log('config >>', preferences[i]);
+    await updateConfig(preferences[i]);
+  }
+}
 
 // RULES
 const getRules = () => {
@@ -343,4 +359,5 @@ module.exports = {
   updateRuleByText,
   updateTrimester,
   addTrimester,
+  updatePreferences,
 }
