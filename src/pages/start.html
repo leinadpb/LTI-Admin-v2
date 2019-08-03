@@ -213,7 +213,7 @@
         
       }
       .config-encuestas {
-        width: 40%;
+        width: 100%;
        
         
         
@@ -284,7 +284,8 @@
       margin:15px;
       font-size: 15px;  
     }
-    textarea{
+    
+    .message{
       border-radius: 5px;
       font-family: arial;
       min-height: 50px;
@@ -299,6 +300,9 @@
       margin:10px;
       
     };
+    .link-surveys {
+      margin: 30px;
+    }
       /* Media queries */
 
     </style>
@@ -573,7 +577,7 @@
             <!--comment box-->
             <div class="comments">
               <p class="text-comments">Mensaje en el recordatorio:</p>
-              <textarea name="mensaje" id="recordatorio"  placeholder="Las violaciones a cualquiera de estas normas pueden acarrear sanciones académicas."></textarea>
+              <textarea  class= "message" name="mensaje" id="recordatorio"  placeholder="Las violaciones a cualquiera de estas normas pueden acarrear sanciones académicas."></textarea>
             </div>
             <!--Printer-->
             <div class="printer">
@@ -596,22 +600,32 @@
           <div class="right-side">
             <div class="config-encuestas">
               <h3 class="rules-title">Encuestas</h3>
-              <select class="select">
-                  <option value="0">Seleccione</option>
-                  <option value="Send To OneNote 16">Send To OneNote 16</option>
-                  <option value="OneNote">OneNote</option>
-                  <option value="PrimoPDF">PrimoPDF</option>
-                  <option value="Microsoft XPS Document Writer">Microsoft XPS Document Writer</option>
-                  <option value="Microsoft Print to PDF">Microsoft Print to PDF</option>
-                  <option value="LABTIPrinter">LABTIPrinter</option>
-                  <option value="Fax">Fax</option>
-                </select>
+              <hr>
+              <!--Checkbox-->
+              <div class="input-e">
+                <input type="checkbox" class="normas"  id="checkbox4">
+                <label for="checkbox4">Activar encuesta para estudiantes.</label>
+              </div>
+              <!--Link-->
+              <div class="link-surveys">
+                <textarea class="link-encuesta" name="Link" id="link-encuesta"  placeholder="Link de la encuesta para estudiantes:"></textarea>
+              </div>
+              <!--Checkbox-->
+              <div class="input-e">
+                <input type="checkbox" class="normas"  id="checkbox5">
+                <label for="checkbox5">Activar encuesta para profesores.</label>
+              </div>
+              <div class="surveys-teacher">
+                <textarea class="link-encuesta" name="Link" id="link-encuesta"  placeholder="Link de la encuesta para profesores:"></textarea>
+              </div>
+              <button type="submit" class="btn btn-danger">Guardar Cambios</button>
             </div>
           </div>
         </div>
       </div>
     <script>
       const ipcRenderer = require('electron').ipcRenderer;
+      const mongoose = require('mongoose');
       const studentFields = ['intecId', 'name', 'subject', 'teacher', 'section', 'trimesterName'];
       const rulesFields = ['number', 'text', 'actions'];
       const trimestersFields = ['start', 'ends', 'name', 'actions'];
@@ -649,8 +663,8 @@
         }));
         setSelectData('trimester-list', windowData.trimesters.map(x => {
           return {
-            value: x.name,
-            text: x.name
+            value: mongoose.Types.ObjectId(x._id.id),
+            text: x.name,
           }
         }));
       });
@@ -843,7 +857,7 @@
         let filtersToApply = [];
         if (teacherFilter.value !== "-1") filtersToApply.push({key: 'teacher', value: teacherFilter.value});
         if (subjectFilter.value !== "-1") filtersToApply.push({key: 'subject', value: subjectFilter.value});
-        if (trimesterFilter.value !== "-1") filtersToApply.push({key: 'trimesterName', value: trimesterFilter.value});
+        if (trimesterFilter.value !== "-1") filtersToApply.push({key: 'trimesterId', value: trimesterFilter.value});
         if (idFilter.value !== "") filtersToApply.push({key: 'intecId', value: idFilter.value});
         let filterObject = {};
         filtersToApply.forEach(filter => {

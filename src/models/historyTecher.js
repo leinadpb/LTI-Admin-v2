@@ -11,6 +11,7 @@ const historyTeacherSchema = mongoose.Schema({
   section: String,
   teacher: String,
   trimesterName: String,
+  trimesterId: mongoose.Types.ObjectId,
   domain: String,
   hasFilledSurvey: Boolean
 });
