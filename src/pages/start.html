@@ -284,19 +284,7 @@
       margin:15px;
       font-size: 15px;  
     }
-    .link-surveys {
-      margin: 30px;
-
-    };
-    .link-encuesta {
-     
-     border-radius: 5px;
-       font-family: arial;
-       min-height: 25px;
-       max-height: 25px;
-       min-width: 80%;
-       max-width: 100%;
-    }
+    
     .message{
       border-radius: 5px;
       font-family: arial;
@@ -312,6 +300,12 @@
       margin:10px;
       
     };
+    .link-surveys {
+      margin: 30px;
+     
+
+    }
+  
     
   
       /* Media queries */
@@ -615,14 +609,21 @@
               <!--Checkbox-->
               <div class="input-e">
                 <input type="checkbox" class="normas"  id="checkbox4">
-                <label for="checkbox4">Permitir aceptar las normas del laboratorio</label>
+                <label for="checkbox4">Activar encuesta para estudiantes.</label>
               </div>
               <!--Link-->
               <div class="link-surveys">
-                <p class="text-e">Link de la encuesta para estudiantes:</p>
-                <textarea class="link-encuesta" name="Link" id="link-encuesta"  placeholder="Encuesta."></textarea>
+                <textarea class="link-encuesta" name="Link" id="link-encuesta"  placeholder="Link de la encuesta para estudiantes:"></textarea>
               </div>
-
+              <!--Checkbox-->
+              <div class="input-e">
+                <input type="checkbox" class="normas"  id="checkbox5">
+                <label for="checkbox5">Activar encuesta para profesores.</label>
+              </div>
+              <div class="surveys-teacher">
+                <textarea class="link-encuesta" name="Link" id="link-encuesta"  placeholder="Link de la encuesta para profesores:"></textarea>
+              </div>
+              <button type="submit" class="btn btn-danger">Guardar Cambios</button>
             </div>
           </div>
         </div>
