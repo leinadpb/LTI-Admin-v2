@@ -2,6 +2,8 @@ const ConfigModel = require('../models/config');
 const RuleModel = require('../models/rule');
 const TrimesterModel = require('../models/trimesters');
 const BlackListModel = require('../models/blackList');
+const StudnetModel = require('../models/historyStudent');
+const TeacherModel = require('../models/historyTecher');
 const queries = require('./queries');
 const settings = require('../settings');
 
@@ -141,38 +143,48 @@ const blackListedUsers = [
 
 queries.getConfigs().then(docs => {
   if (docs.length === 0) {
-    ConfigModel.create(AppConfigs, (err, result) => {
-      if (!!err) return;
-      console.log('Application configurations seeded. ', result);
-    });
+    
+  } else {
+    console.log('remove configs...')
+    return ConfigModel.remove({});
   }
 });
 
 queries.getRules().then(docs => {
   if (docs.length === 0) {
-    RuleModel.create(rules, (err, result) => {
-      if (!!err) return;
-      console.log('Rules seeded. ', result);
-    })
+   
+  } else {
+    return RuleModel.remove({});
   }
 });
 
 queries.getTrimesters().then(docs => {
   if (docs.length === 0) {
-    TrimesterModel.create(trimesters, (err, result) => {
-      if (!!err) {
-        console.log(err);
-        return;
-      };
-      console.log('Trimesters seeded. ', result);
-    })
+   
+  } else {
+    return TrimesterModel.remove({});
   }
 });
 
 queries.getBlackListUsers().then(docs => {
   if (docs.length === 0) {
-    BlackListModel.create(blackListedUsers, (err, result) => {
-      console.log('Blacklist seeded. ', result);
-    })
+   
+  } else {
+    return BlackListModel.remove({});
+  }
+});
+
+queries.getStudents().then(docs => {
+  if (docs.length === 0) {
+   
+  } else {
+    return StudnetModel.remove({});
+  }
+});
+queries.getTeachers().then(docs => {
+  if (docs.length === 0) {
+   
+  } else {
+    return TeacherModel.remove({});
   }
 });
