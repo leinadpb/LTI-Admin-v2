@@ -293,11 +293,11 @@ app.on('ready', async () => {
   const rules = await queries.getRules();
 
   const APP_PREFERENCES = {
-    fullscreen: configs.find(cfg => cfg.key === settings.CONFIGS.isFullscreen).value,
-    showSurvey: configs.find(cfg => cfg.key === settings.CONFIGS.showSurvey).value,
-    studentUrl: configs.find(cfg => cfg.key === settings.CONFIGS.studentUrl).value,
-    teacherUrl: configs.find(cfg => cfg.key === settings.CONFIGS.teacherUrl).value,
-    reminderText: configs.find(cfg => cfg.key === settings.CONFIGS.reminderText).value,
+    fullscreen: !!configs.find(cfg => cfg.key === settings.CONFIGS.isFullscreen) ? configs.find(cfg => cfg.key === settings.CONFIGS.isFullscreen).value : '',
+    showSurvey: !!configs.find(cfg => cfg.key === settings.CONFIGS.showSurvey) ? configs.find(cfg => cfg.key === settings.CONFIGS.showSurvey).value : '',
+    studentUrl: !!configs.find(cfg => cfg.key === settings.CONFIGS.studentUrl) ? configs.find(cfg => cfg.key === settings.CONFIGS.studentUrl).value : '',
+    teacherUrl:  !!configs.find(cfg => cfg.key === settings.CONFIGS.teacherUrl) ? configs.find(cfg => cfg.key === settings.CONFIGS.teacherUrl).value : '',
+    reminderText: !!configs.find(cfg => cfg.key === settings.CONFIGS.reminderText) ? configs.find(cfg => cfg.key === settings.CONFIGS.reminderText).value : '',
   }
 
   const user = {
