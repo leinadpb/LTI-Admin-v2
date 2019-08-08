@@ -1,7 +1,14 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
-console.log(process.env.CONNECTION_STRING);
-const db = process.env.CONNECTION_STRING;
+
+let envs = process.env;
+try {
+  envs = require('../../environments');
+} catch (ex) {
+  console.log('Please, create environments.js file (with all needed environments variables) in the root project before deploying to production: ', ex);
+}
+console.log(envs.CONNECTION_STRING);
+const db = envs.CONNECTION_STRING;
 
 mongoose
   .connect(db, { useNewUrlParser: true })

@@ -3,3 +3,4 @@ out
 .env
 yarn.lock
 yarn.error.log
+environments.js
