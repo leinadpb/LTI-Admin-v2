@@ -1,8 +1,8 @@
 {
-  "name": "lab-admin",
-  "productName": "lab-admin",
+  "name": "labadmin",
+  "productName": "labadmin",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Admin panel - LTI",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
