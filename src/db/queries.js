@@ -306,7 +306,8 @@ const addBlackListUser = (user) => {
   });
 }
 const deleteBlackListUser = (user) => {
-  return BlackListModel.findOneAndDelete({_id: mongoose.Types.ObjectId(user.mongoId.id)}, (err) => {
+  console.log('user > ', user);
+  return BlackListModel.findOneAndDelete({intecId: user.intecId}, (err) => {
     if (!!err) {
       console.log('Error deleting admin: ', err);
       return null;
@@ -314,7 +315,7 @@ const deleteBlackListUser = (user) => {
   });
 }
 const updateBlackListUser = (user) => {
-  return BlackListModel.findOneAndUpdate({_id: mongoose.Types.ObjectId(user.mongoId.id)}, user, (err) => {
+  return BlackListModel.findOneAndUpdate({intecId: user.intecId}, user, (err) => {
     if (!!err) {
       console.log('Error updating admin: ', err);
       return null;
