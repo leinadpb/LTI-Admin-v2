@@ -35,9 +35,12 @@ const openMain = (initData) => {
     fullscreen: false
   });
   ipcMain.on('main-request-data', (e, args) => {
+    console.log('SUBJECTS SUBJECTS SUBJECTS SUBJECTS SUBJECTS');
+    console.log(initData.subjects);
     e.reply('main-request-data-response', initData);
   });
   ipcMain.on('fetch-students', async (e, args) => {
+    console.log(args.filterObject);
     let studentsResult = (await queries.getHistoryStudentsFiltered(args.filterObject)).data.data;
     e.reply('fetch-students-response', studentsResult);
   });

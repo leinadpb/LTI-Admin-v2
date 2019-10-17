@@ -761,6 +761,10 @@
       const adminsFields = ['intecId', 'fullName', 'domain', 'actions'];
       const settings = require('../settings');
 
+      const unique = (value, index, self) => {
+        return self.indexOf(value) === value;
+      }
+
       let windowData = undefined;
       ipcRenderer.send('main-request-data', {});
       ipcRenderer.on('save-preferences-success', (e, args) => {
@@ -787,11 +791,24 @@
         }));
         let teachers = [];
         windowData.subjects.forEach(fs => {
-          let subTeachers = fs.teacherAssigned.split(';');
+          
+          let subTeachers = undefined;
+          if (fs.teacherAssigned.includes(';')) {
+            subTeachers = fs.teacherAssigned.split(';');
+          } else {
+            subTeachers = [fs.teacherAssigned];
+          }
+
           subTeachers.forEach(st => {
-            teachers.push(st);
+            if (st !== "") {
+              teachers.push(st);
+            }
           })
-        })
+        });
+
+        teachers = new Set(teachers);
+        teachers = [...teachers];
+
         setSelectData('teacher-list', teachers.map(x => {
           if (!!x && x.length > 0) {
             return {
@@ -802,7 +819,7 @@
         }));
         setSelectData('trimester-list', windowData.trimesters.map(x => {
           return {
-            value: mongoose.Types.ObjectId(x._id.id),
+            value: x.name,
             text: x.name,
           }
         }));
@@ -1119,7 +1136,7 @@
         let filtersToApply = [];
         if (teacherFilter.value !== "-1") filtersToApply.push({key: 'teacher', value: teacherFilter.value});
         if (subjectFilter.value !== "-1") filtersToApply.push({key: 'subject', value: subjectFilter.value});
-        if (trimesterFilter.value !== "-1") filtersToApply.push({key: 'trimesterId', value: trimesterFilter.value});
+        if (trimesterFilter.value !== "-1") filtersToApply.push({key: 'trimesterName', value: trimesterFilter.value});
         if (idFilter.value !== "") filtersToApply.push({key: 'intecId', value: idFilter.value});
         let filterObject = {};
         filtersToApply.forEach(filter => {
