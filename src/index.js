@@ -36,15 +36,35 @@ const openMain = (initData) => {
   });
   ipcMain.on('main-request-data', (e, args) => {
     e.reply('main-request-data-response', initData);
-  })
+  });
   ipcMain.on('fetch-students', async (e, args) => {
     let studentsResult = (await queries.getHistoryStudentsFiltered(args.filterObject)).data.data;
     e.reply('fetch-students-response', studentsResult);
-  })
+  });
   ipcMain.on('save-preferences', async (e, args) => {
     let preferences = args.newPreferences;
     await queries.updatePreferences(preferences);
     e.reply('save-preferences-success', {});
+  });
+
+  // Advanced command -> Update signatures
+  ipcMain.on('adv-cmd-upd-sig', async (e, args) => {
+    let result = false;
+    let resp = null;
+    try {
+      resp = await queries.advancedCommandUpdateSignatures();
+    } catch(e) {
+      console.log(e);
+    }
+    console.log('DATA >>>>>>>>>>');
+      console.log(resp);
+    if (!!resp && !!resp.data && !!resp.data.success && resp.data.success) {
+      result = true;
+      
+    }
+    e.reply('adv-cmd-upd-sig-response', {
+      success: result,
+    });
   })
 
   // Rules Dialogs

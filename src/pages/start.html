@@ -185,12 +185,21 @@
         display: none;
       }
 
+      .advanced-content {
+        grid-area: main;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        display: none;
+      }
+
       .main-content {
-                
-          max-height: 100%;
-          overflow:hidden;
-          margin-left: 3%;
-                } 
+        max-height: 100%;
+        overflow:hidden;
+        margin-left: 3%;
+      } 
   
 .inner {
 	overflow: hidden;
@@ -391,8 +400,18 @@
               </span>
             </div>
           </div>
+          <div class="menu-option" onclick="menuOptionClick(this, 'advanced')">
+            <div class="menu-option-indicator-off"></div>
+            <div class="menu-option-label">
+              <span>
+                Avanzada (Cuidado!)
+              </span>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!--  HOME:  HERE CODE FOR HOME SCREEN -->
 
       <div class="home-content" id="home">
         <div class="main-content" id="main-content">
@@ -404,7 +423,7 @@
                 </div>
                   
                   <div class="card-body text-center">
-                    <h6 class="card-title">Gestion de trimestres</h6><hr>
+                    <h6 class="card-title">Gestión de trimestres</h6><hr>
                     <p class="card-text">Crear y modificar los trimestres, debes crear el trimestre correspondiente.</p>
                     
                   </div>
@@ -418,7 +437,7 @@
                   <img class="card-img-top"  style="width: 21%; margin-left: 40%" src="../../public/images/loupe.png" alt="Card image cap">
                   </div>
                   <div class="card-body text-center">
-                    <h6 class="card-title">Busqueda Avanzada.</h6><hr>
+                    <h6 class="card-title">Búsqueda Avanzada.</h6><hr>
                     <p class="card-text">Filtra los estudiantes por trimestre, asignatura, profesor y por nombre o matricula. </p>
                    
                   </div>
@@ -445,7 +464,7 @@
                 </div>
                   
                   <div class="card-body text-center">
-                    <h6 class="card-title">Gestion de Normas.</h6><hr>
+                    <h6 class="card-title">Gestión de Normas.</h6><hr>
                     <p class="card-text">Crear, modificar y eliminar las Normas. </p>
                     
                   </div>
@@ -468,6 +487,10 @@
           </div>
         </div>
       </div>
+
+
+       <!--  SIGNS:  HERE CODE FOR SIGNS SCREEN -->
+
       <div class="signs-content" id="signs">
         <div class="filter-panel">
           <div class="filter-option">
@@ -533,9 +556,17 @@
           </table>
         </div>
       </div>
+
+
+       <!--  SURVEY:  HERE CODE FOR SURVEY SCREEN -->
+
       <div class="survey-content" id="survey">
         <div style="padding: 32px;">Aquí mostraremos resultados de las encuestas realizadas por trimestres. <b>Aún no está disponible.</b></div>
       </div>
+
+
+       <!--  RULES:  HERE CODE FOR RULES SCREEN -->
+
       <div class="rules-content" id="rules">
         <div class="header">
           <span style="margin-right: 16px;">Reglas del LABTI - INTEC</span>
@@ -552,6 +583,9 @@
           </table>
         </div>
       </div>
+
+       <!--  TRIMESTRES:  HERE CODE FOR TRIMESTERS SCREEN -->
+
       <div class="trimesters-content" id="trimesters">
         <div class="header">
           <span style="margin-right: 16px;">Trimestres - INTEC</span>
@@ -569,6 +603,9 @@
           </table>
         </div>
       </div>
+
+       <!--  ADMINS:  HERE CODE FOR ADMINS SCREEN -->
+
       <div class="admins-content" id="admins">
         <div class="header">
           <div>
@@ -591,6 +628,9 @@
           </table>
         </div>
       </div>
+
+       <!--  CONFIG:  HERE CODE FOR CONFIG SCREEN -->
+
       <div class="config-content" id="config">
         <div class="header-config">
           <h2>Configuraciones</h2>
@@ -622,6 +662,7 @@
               <textarea class= "message" name="mensaje" id="REMINDER_TEXT"></textarea>
             </div>
             <!--Printer-->
+            <!--  TODO:  SELECT FROM EXISTINGS ON INTERNAL NETWORK -->
             <div class="printer">
               <h3 class="rules-title">Impresora</h3>
               <hr>
@@ -667,6 +708,50 @@
           </div>
         </div>
       </div>
+
+       <!--  AVANZADA (CUIDADO!):  HERE CODE FOR AVANZADA SCREEN -->
+
+       <div class="advanced-content" id="advanced">
+        <div style="display: flex; width: 100%; height: 100%; flex-direction: column;">
+            <div style="width: 100%; padding: 12px; margin-bottom: 16px; display: flex; justify-content: center; align-items: center">
+              <span style="font-size: 1.16rem; font-weight: 600; padding: 16px;">OPCIONES AVANZADAS (Cuidado!!!)</span>
+            </div>
+            <div id="command-result-success" style="display: none;">
+              <span style="font-size: 0.98rem; color: green; padding: 12px;">El comando ha sido ejecutado exitosamente: Asignaturas actualizadas a la del trimestre actual.</span>
+            </div>
+            <div id="command-result-fail" style="display: none;">
+              <span style="font-size: 0.98rem; color: darkred; padding: 12px;">El comando no se ha podido ejecutar, contacte a su administrador.</span>
+            </div>
+            <div id="command-result-wait" style="display: none;">
+              <span style="font-size: 0.88rem; color: black; padding: 12px;">Ejecutando comando... Por favor, espere.</span>
+            </div>
+            <div class="table-wrapper">
+              <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                  <th>ACCION</th>
+                  <th>Riesgo</th>
+                  <th></th>
+                </thead>
+                <tbody class="table-striped">
+                  <tr>
+                    <td>
+                      Actualizar asignaturas con las de la oferta académica de INTEC del trimestre actual.
+                    </td>
+                    <td>
+                      Esto SOLO debe hacerse justo antes de iniciar el trimestre. Una vez que los estudiantes hayan empezado a firmar NO SE DEBE presionar este comando. Ya que se perderia la relacion de estudiantes por asignaturas. Este comando, elimina de la base de datos TODAS las aignaturas y genera unas nuevas, asignándoles un nuevo identificador.
+                    </td>
+                    <td>
+                      <button id="advanced-cmd-upd-sig-btn" class="btn btn-secondary btn-sm" onclick="avanzadaUpdateSignatures()">SEGURO, ACTUALIZAR (O. O)</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+      </div>
+
+       <!--  OTHER:  HERE CODE FOR OTHERS SCREENS   :)  -->
+
     <script>
       const ipcRenderer = require('electron').ipcRenderer;
       const mongoose = require('mongoose');
@@ -730,7 +815,7 @@
       })
 
       // Functions
-      const options = ['home', 'survey', 'signs', 'rules', 'trimesters', 'admins', 'config'];
+      const options = ['home', 'survey', 'signs', 'rules', 'trimesters', 'admins', 'config', 'advanced'];
       function menuOptionClick(e, key) {
         options.forEach(opt => {
           document.getElementById(opt).style.display = "none";
@@ -1041,6 +1126,38 @@
           filterObject[filter.key] = filter.value;
         });
         ipcRenderer.send('fetch-students', {filterObject: filterObject});
+      }
+
+      // OPCIONES AVANZADAS
+
+      function avanzadaUpdateSignatures() {
+        let cmdBtn = document.getElementById('advanced-cmd-upd-sig-btn');
+        let cmdResultWait = document.getElementById('command-result-wait');
+        cmdBtn.disabled = true;
+        cmdResultWait.style.display = 'inline-block';
+
+        ipcRenderer.send('adv-cmd-upd-sig', {});
+        ipcRenderer.on('adv-cmd-upd-sig-response', (e, args) => {
+          let cmdResultWait = document.getElementById('command-result-wait');
+          let cmdBtn = document.getElementById('advanced-cmd-upd-sig-btn');
+          cmdResultWait.style.display = 'none';
+
+          if (args.success) {
+            let cmdResult = document.getElementById('command-result-success');
+            cmdResult.style.display = 'block';
+            setTimeout(() => {
+              cmdResult.style.display = 'none';
+            }, 3000);
+          } else {
+            let cmdResult = document.getElementById('command-result-fail');
+            cmdResult.style.display = 'block';
+            setTimeout(() => {
+              cmdResult.style.display = 'none';
+            }, 3000);
+          }
+
+          cmdBtn.disabled = false;
+        });
       }
     </script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

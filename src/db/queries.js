@@ -1,6 +1,8 @@
 const axiosInstance = require('../helpers/axios_instance.js');
 const settings = require('../settings.js');
 
+require('dotenv').config();
+
 // Init axios - Set default configuration
 const getQueries = axiosInstance.init().then((axios) => {
   /**
@@ -10,6 +12,7 @@ const getQueries = axiosInstance.init().then((axios) => {
    */
 
   const EPS = settings.API.endpoints;
+  const SECRET_KEY = settings.SECRET_KEY;
 
   // CONFIGS
   const getConfigs = () => {
@@ -156,6 +159,13 @@ const getQueries = axiosInstance.init().then((axios) => {
     })
   }
 
+
+  // ADVACNED COMMANDS
+
+  const advancedCommandUpdateSignatures = () => {
+    return axios.get(`${EPS.advanced.updateSignatures}`)
+  }
+
   return {
     getConfigs,
     getRules,
@@ -188,6 +198,7 @@ const getQueries = axiosInstance.init().then((axios) => {
     removeAllSubjects,
     getAppUser,
     updateConfig,
+    advancedCommandUpdateSignatures,
   }
 })
 

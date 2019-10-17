@@ -33,6 +33,8 @@ const CONFIGS = {
 
 const SERVER_HOST = envs.SERVER_HOST;
 const SERVER_PORT = envs.SERVER_PORT;
+const SECRET_KEY = envs.SECRET_KEY;
+
 const API = {
   baseURL: `http://${SERVER_HOST}:${SERVER_PORT}/api/v1`,
   endpoints: {
@@ -85,6 +87,9 @@ const API = {
     user: {
       getUser: '/users', // GET
       getAppUser: '/users/app-user', // GET
+    },
+    advanced: {
+      updateSignatures: '/advanced/upd-signatures', // GET
     }
   }
 }
@@ -92,5 +97,6 @@ const API = {
 module.exports = {
   PAGES,
   CONFIGS,
-  API
+  API,
+  SECRET_KEY
 }
